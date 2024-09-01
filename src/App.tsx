@@ -2,13 +2,15 @@ import { FormProvider, type SubmitHandler, useForm } from 'react-hook-form';
 import type { FormValues } from './models/form-values';
 import { SectionList } from './components/SectionList';
 import { makeZip } from './services/make-zip';
-
-import imageHelp1 from './assets/help-1.png';
+import { Modal } from 'react-bootstrap';
+import { useState } from 'react';
 
 import './App.scss';
+import { Help } from './components/Help';
 
 function App() {
   const methods = useForm<FormValues>();
+  const [isDownloadedModalShown, setDownloadedModalShown] = useState(false);
 
   const onValid: SubmitHandler<FormValues> = async ({ emojis }) => {
     const zippedBlob = await makeZip(emojis);
@@ -17,7 +19,11 @@ function App() {
     a.href = url;
     a.download = 'emojis.zip';
     a.click();
+    URL.revokeObjectURL(url);
+    setDownloadedModalShown(true);
   };
+
+  const count = methods.watch('emojis')?.length;
 
   return (
     <div>
@@ -47,26 +53,42 @@ function App() {
             <button
               type="submit"
               className="btn btn-primary d-block mt-5 mx-auto px-5 fs-5"
+              disabled={!count}
             >
               絵文字パックを生成
             </button>
-            <details className="mt-5">
-              <summary>Misskeyへの絵文字パックのインポート方法</summary>
-              <ol>
-                <li>絵文字パックをダウンロードします。</li>
-                <li>Misskeyのカスタム絵文字管理画面を開きます。</li>
-                <li>
-                  [インポート] を選択し、ダウンロードしたパックを選択します。
-                  <img className="mw-100" src={imageHelp1} alt="Misskeyのカスタム絵文字管理画面" />
-                </li>
-              </ol>
-            </details>
+            <Help />
           </form>
         </FormProvider>
       </main>
       <footer className="text-center my-5 text-muted">
         (C) 2024 Ebise Lutica
       </footer>
+      <Modal show={isDownloadedModalShown} onHide={() => setDownloadedModalShown(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>絵文字パックをダウンロードしました。</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>ダウンロードされたzipファイルをMisskeyのカスタム絵文字管理画面でインポートしてください。</p>
+          <p>Emoji Packerがお役に立ちましたら、SNSでのシェアをお願いします！</p>
+          <div className="hstack gap-3 mb-3">
+            <a
+              href="https://github.com/EbiseLutica/emojipacker4misskey"
+              className="btn btn-outline-primary"
+              target="_blank"
+              rel="noreferrer noopener">
+              GitHubでStar
+            </a>
+            <a href="https://misskey-hub.net/share/?text=Emoji+Packer+for+Misskey%E3%82%92%E4%BD%BF%E3%81%A3%E3%81%A6%E3%81%BF%E3%81%BE%E3%81%97%E3%81%9F+%23emojipacker&url=https:%2F%2Femojipacker.lutic.at&visibility=public&localOnly=0&manualInstance=mk.shrimpia.network"
+              className="btn btn-outline-primary"
+              target="_blank"
+              rel="noreferrer noopener">
+              Misskeyでシェア
+            </a>
+          </div>
+          <Help />
+        </Modal.Body>
+      </Modal>
     </div>
   );
 }
