@@ -3,6 +3,8 @@ import type { FormValues } from './models/form-values';
 import { SectionList } from './components/SectionList';
 import { makeZip } from './services/make-zip';
 
+import imageHelp1 from './assets/help-1.png';
+
 import './App.scss';
 
 function App() {
@@ -21,7 +23,7 @@ function App() {
     <div>
       <main className="ep-root p-5 bg-white rounded-5 my-5 shadow">
         <header>
-          <h1>Emoji Packer for Misskey</h1>
+          <h1>Emoji Packer for Misskey (β)</h1>
           <ul>
             <li>
               複数の絵文字画像を、Misskeyで使える絵文字インポート用のzipファイルに変換するサービスです。
@@ -48,6 +50,17 @@ function App() {
             >
               絵文字パックを生成
             </button>
+            <details className="mt-5">
+              <summary>Misskeyへの絵文字パックのインポート方法</summary>
+              <ol>
+                <li>絵文字パックをダウンロードします。</li>
+                <li>Misskeyのカスタム絵文字管理画面を開きます。</li>
+                <li>
+                  [インポート] を選択し、ダウンロードしたパックを選択します。
+                  <img className="mw-100" src={imageHelp1} alt="Misskeyのカスタム絵文字管理画面" />
+                </li>
+              </ol>
+            </details>
           </form>
         </FormProvider>
       </main>
