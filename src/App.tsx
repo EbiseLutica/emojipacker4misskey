@@ -52,7 +52,7 @@ function App() {
         </FormProvider>
       </main>
       <footer className="text-center my-5 text-muted">
-        (C) 2024 Shrimpia Network
+        (C) 2024 Ebise Lutica
       </footer>
     </div>
   );
