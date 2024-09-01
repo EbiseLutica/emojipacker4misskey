@@ -1,4 +1,3 @@
-
 export interface Emoji {
   file: File;
   name: string;

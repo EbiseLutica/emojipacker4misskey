@@ -1,0 +1,16 @@
+{
+	"$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+	"files": {
+		"ignore": ["dist", "node_modules", ".pnpm-store"],
+		"include": ["src"]
+	},
+	"javascript": {
+		"jsxRuntime": "reactClassic",
+		"formatter": {
+			"indentStyle": "space",
+			"semicolons": "always",
+			"quoteStyle": "single",
+			"jsxQuoteStyle": "double"
+		}
+	}
+}
