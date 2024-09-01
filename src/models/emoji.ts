@@ -4,7 +4,7 @@ export interface Emoji {
   name: string;
   category: string;
   tags: string;
-  license: string | null;
+  license: string;
   localOnly: boolean;
   isSensitive: boolean;
 }

@@ -1,13 +1,21 @@
-import { FormProvider, useForm } from 'react-hook-form';
+import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { FormValues } from './models/form-values';
 import { SectionList } from './components/SectionList';
+import { makeZip } from './services/make-zip';
 
 import './App.scss';
 
 function App() {
-  const methods = useForm<FormValues>({
-    
-  });
+  const methods = useForm<FormValues>();
+
+  const onValid: SubmitHandler<FormValues> = async ({emojis}) => {
+    const zippedBlob = await makeZip(emojis);
+    const url = URL.createObjectURL(zippedBlob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'emojis.zip';
+    a.click();
+  };
 
   return (
     <div>
@@ -22,7 +30,7 @@ function App() {
           </ul>
         </header>
         <FormProvider {...methods}>
-          <form onSubmit={methods.handleSubmit(() => {})}>
+          <form onSubmit={methods.handleSubmit(onValid)}>
             <SectionList />
             <button type="submit" className="btn btn-primary d-block mt-5 mx-auto px-5 fs-5">絵文字パックを生成</button>
           </form>
