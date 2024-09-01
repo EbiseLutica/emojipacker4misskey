@@ -45,9 +45,9 @@ export const Section: React.FC<SectionProps> = (p) => {
             </td>
             <td>
                 <input
-                    {...register(`emojis.${p.index}.tags`)}
+                    {...register(`emojis.${p.index}.license`)}
                     className="form-control"
-                    defaultValue={p.field.tags}
+                    defaultValue={p.field.license}
                     placeholder="ライセンス"
                 />
             </td>
