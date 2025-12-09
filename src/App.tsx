@@ -10,6 +10,7 @@ import type { Emoji } from './models/emoji';
 import './App.scss';
 import { Help } from './components/Help';
 import { ImportModal } from './components/ImportModal';
+import { Changelog } from './components/Changelog';
 
 function App() {
   const methods = useForm<FormValues>();
@@ -89,7 +90,7 @@ function App() {
     <div>
       <main className="ep-root p-5 my-5">
         <header>
-          <h1 className="fs-2">Emoji Packer for Misskey (β)</h1>
+          <h1 className="fs-2">Emoji Packer for Misskey <small>1.1.0</small></h1>
           <ul>
             <li>
               複数の絵文字画像を、Misskeyで使える絵文字インポート用のzipファイルに変換するサービスです。
@@ -134,6 +135,7 @@ function App() {
               </button>
             </div>
             <Help />
+            <Changelog />
           </form>
         </FormProvider>
       </main>
