@@ -2,7 +2,7 @@ import { FormProvider, type SubmitHandler, useForm } from 'react-hook-form';
 import type { FormValues } from './models/form-values';
 import { SectionList } from './components/SectionList';
 import { makeZip } from './services/make-zip';
-import { importZip } from './services/import-zip';
+import { importZip, type ImportProgress } from './services/import-zip';
 import { Modal } from 'react-bootstrap';
 import { useState, useRef } from 'react';
 import type { Emoji } from './models/emoji';
@@ -17,6 +17,8 @@ function App() {
   const [isImportErrorModalShown, setImportErrorModalShown] = useState(false);
   const [importErrorMessage, setImportErrorMessage] = useState('');
   const [isImportModalShown, setImportModalShown] = useState(false);
+  const [isImportLoadingShown, setImportLoadingShown] = useState(false);
+  const [importProgress, setImportProgress] = useState<ImportProgress | null>(null);
   const [importedEmojis, setImportedEmojis] = useState<Emoji[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -39,8 +41,10 @@ function App() {
     const file = event.target.files?.[0];
     if (!file) return;
 
+    setImportLoadingShown(true);
+    setImportProgress(null);
     try {
-      const emojis = await importZip(file);
+      const emojis = await importZip(file, setImportProgress);
       setImportedEmojis(emojis);
       setImportModalShown(true);
       // ファイル入力をリセット（同じファイルを再度選択できるようにする）
@@ -55,6 +59,12 @@ function App() {
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
+    } finally {
+      setImportLoadingShown(false);
+      setImportProgress(null);
+    }
+  };
+
   const handleReplaceEmojis = () => {
     methods.setValue('emojis', importedEmojis);
     setImportModalShown(false);
@@ -162,6 +172,31 @@ function App() {
         <Modal.Body>
           <p>{importErrorMessage}</p>
           <p>正しい形式のzipファイルを選択してください。</p>
+        </Modal.Body>
+      </Modal>
+      <Modal show={isImportLoadingShown} centered backdrop="static" keyboard={false}>
+        <Modal.Body className="text-center py-5">
+          <div className="spinner-border text-primary mb-3" role="status" style={{ width: '3rem', height: '3rem' }}>
+            <span className="visually-hidden">読み込み中...</span>
+          </div>
+          {importProgress ? (
+            <>
+              <p className="mb-2">{importProgress.message}</p>
+              <div className="progress" role="progressbar" style={{ height: '25px' }}>
+                <div
+                  className="progress-bar progress-bar-striped"
+                  style={{ width: `${Math.round((importProgress.current / importProgress.total) * 100)}%` }}
+                  aria-valuenow={importProgress.current}
+                  aria-valuemin={0}
+                  aria-valuemax={importProgress.total}
+                >
+                  {importProgress.current} / {importProgress.total}
+                </div>
+              </div>
+            </>
+          ) : (
+            <p className="mb-0">zipファイルを読み込み中...</p>
+          )}
         </Modal.Body>
       </Modal>
       <ImportModal
