@@ -2,8 +2,9 @@ import { FormProvider, type SubmitHandler, useForm } from 'react-hook-form';
 import type { FormValues } from './models/form-values';
 import { SectionList } from './components/SectionList';
 import { makeZip } from './services/make-zip';
+import { importZip } from './services/import-zip';
 import { Modal } from 'react-bootstrap';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 import './App.scss';
 import { Help } from './components/Help';
@@ -11,6 +12,9 @@ import { Help } from './components/Help';
 function App() {
   const methods = useForm<FormValues>();
   const [isDownloadedModalShown, setDownloadedModalShown] = useState(false);
+  const [isImportErrorModalShown, setImportErrorModalShown] = useState(false);
+  const [importErrorMessage, setImportErrorMessage] = useState('');
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const onValid: SubmitHandler<FormValues> = async ({ emojis }) => {
     const zippedBlob = await makeZip(emojis);
@@ -21,6 +25,32 @@ function App() {
     a.click();
     URL.revokeObjectURL(url);
     setDownloadedModalShown(true);
+  };
+
+  const handleImportClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const emojis = await importZip(file);
+      methods.setValue('emojis', emojis);
+      // ファイル入力をリセット（同じファイルを再度選択できるようにする）
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    } catch (error) {
+      console.error('インポートエラー:', error);
+      setImportErrorMessage(error instanceof Error ? error.message : 'zipファイルの読み込みに失敗しました');
+      setImportErrorModalShown(true);
+      // ファイル入力をリセット
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
   };
 
   const count = methods.watch('emojis')?.length;
@@ -50,13 +80,29 @@ function App() {
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onValid)}>
             <SectionList />
-            <button
-              type="submit"
-              className="btn btn-primary d-block mt-5 mx-auto px-5 fs-5"
-              disabled={!count}
-            >
-              絵文字パックを生成
-            </button>
+            <div className="d-flex gap-3 justify-content-center mt-5">
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleFileChange}
+                accept=".zip"
+                style={{ display: 'none' }}
+              />
+              <button
+                type="button"
+                className="btn btn-secondary px-5 fs-5"
+                onClick={handleImportClick}
+              >
+                zipファイルをインポート
+              </button>
+              <button
+                type="submit"
+                className="btn btn-primary px-5 fs-5"
+                disabled={!count}
+              >
+                絵文字パックを生成
+              </button>
+            </div>
             <Help />
           </form>
         </FormProvider>
@@ -87,6 +133,15 @@ function App() {
             </a>
           </div>
           <Help />
+        </Modal.Body>
+      </Modal>
+      <Modal show={isImportErrorModalShown} onHide={() => setImportErrorModalShown(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>インポートエラー</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>{importErrorMessage}</p>
+          <p>正しい形式のzipファイルを選択してください。</p>
         </Modal.Body>
       </Modal>
     </div>

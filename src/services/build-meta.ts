@@ -1,11 +1,12 @@
 import type { Emoji } from '../models/emoji';
+import type { MetaData } from '../types/meta';
 
 /**
  * Misskeyの絵文字インポートzipファイル用のメタデータJSONファイルを生成します。
  * @param emojis 絵文字データ
  * @returns メタデータJSON
  */
-export const buildMeta = (emojis: Emoji[]) => {
+export const buildMeta = (emojis: Emoji[]): MetaData => {
   return {
     metaVersion: 2,
     host: 'emojipacker.lutic.at',
