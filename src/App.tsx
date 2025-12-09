@@ -5,15 +5,19 @@ import { makeZip } from './services/make-zip';
 import { importZip } from './services/import-zip';
 import { Modal } from 'react-bootstrap';
 import { useState, useRef } from 'react';
+import type { Emoji } from './models/emoji';
 
 import './App.scss';
 import { Help } from './components/Help';
+import { ImportModal } from './components/ImportModal';
 
 function App() {
   const methods = useForm<FormValues>();
   const [isDownloadedModalShown, setDownloadedModalShown] = useState(false);
   const [isImportErrorModalShown, setImportErrorModalShown] = useState(false);
   const [importErrorMessage, setImportErrorMessage] = useState('');
+  const [isImportModalShown, setImportModalShown] = useState(false);
+  const [importedEmojis, setImportedEmojis] = useState<Emoji[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const onValid: SubmitHandler<FormValues> = async ({ emojis }) => {
@@ -37,7 +41,8 @@ function App() {
 
     try {
       const emojis = await importZip(file);
-      methods.setValue('emojis', emojis);
+      setImportedEmojis(emojis);
+      setImportModalShown(true);
       // ファイル入力をリセット（同じファイルを再度選択できるようにする）
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
@@ -50,7 +55,22 @@ function App() {
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
-    }
+  const handleReplaceEmojis = () => {
+    methods.setValue('emojis', importedEmojis);
+    setImportModalShown(false);
+    setImportedEmojis([]);
+  };
+
+  const handleAppendEmojis = () => {
+    const currentEmojis = methods.getValues('emojis') || [];
+    methods.setValue('emojis', [...currentEmojis, ...importedEmojis]);
+    setImportModalShown(false);
+    setImportedEmojis([]);
+  };
+
+  const handleCloseImportModal = () => {
+    setImportModalShown(false);
+    setImportedEmojis([]);
   };
 
   const count = methods.watch('emojis')?.length;
@@ -144,6 +164,13 @@ function App() {
           <p>正しい形式のzipファイルを選択してください。</p>
         </Modal.Body>
       </Modal>
+      <ImportModal
+        show={isImportModalShown}
+        emojis={importedEmojis}
+        onHide={handleCloseImportModal}
+        onReplace={handleReplaceEmojis}
+        onAppend={handleAppendEmojis}
+      />
     </div>
   );
 }
