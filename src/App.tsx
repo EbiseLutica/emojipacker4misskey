@@ -77,23 +77,23 @@ function App() {
 
   return (
     <div>
-      <main className="ep-root p-5 bg-white rounded-5 my-5 shadow">
+      <main className="ep-root p-5 my-5">
         <header>
-          <h1>Emoji Packer for Misskey (β)</h1>
+          <h1 className="fs-2">Emoji Packer for Misskey (β)</h1>
           <ul>
             <li>
               複数の絵文字画像を、Misskeyで使える絵文字インポート用のzipファイルに変換するサービスです。
             </li>
-            <li>Misskey 2024.8.0 で動作確認しています。</li>
+            <li>Misskey 2024.8.0-2025.11.0 で動作確認しています。</li>
             <li>
-              お使いの端末だけで動作するため、アップロードした画像や入力値は、特定のサーバー等には一切送信されません。
+              お使いの端末で完結しており、アップロードした画像や入力値は外部サーバー等に一切送信されません。
             </li>
             <li>
-              なにか不具合がありましたら、
+              なにか不具合がありましたら、お手数ですが
               <a href="https://mk.shrimpia.network/@Lutica">
                 @Lutica@mk.shrimpia.network
               </a>
-              まで。
+              までご連絡ください。
             </li>
           </ul>
         </header>
@@ -128,7 +128,7 @@ function App() {
         </FormProvider>
       </main>
       <footer className="text-center my-5 text-muted">
-        (C) 2024 Ebise Lutica
+        (C) 2024-2025 Ebise Lutica | <a href="https://github.com/EbiseLutica/emojipacker4misskey.git" target="_blank" rel="noreferrer noopener">GitHub</a>
       </footer>
       <Modal show={isDownloadedModalShown} onHide={() => setDownloadedModalShown(false)}>
         <Modal.Header closeButton>
