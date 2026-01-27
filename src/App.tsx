@@ -4,7 +4,7 @@ import { SectionList } from "./components/SectionList";
 import { makeZip } from "./services/make-zip";
 import { importZip, type ImportProgress } from "./services/import-zip";
 import { Modal } from "react-bootstrap";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { Emoji } from "./models/emoji";
 
 import "./App.scss";
@@ -76,6 +76,18 @@ function App() {
   };
 
   const count = methods.watch("emojis")?.length;
+
+  // 絵文字がパックに存在するときにリロード・終了のハンドリングを行う
+  useEffect(() => {
+    if (!count) return;
+
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, [count]);
 
   return (
     <div>

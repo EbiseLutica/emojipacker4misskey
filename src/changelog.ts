@@ -1,3 +1,5 @@
+import { version } from "react";
+
 export type ChangeLog = {
   version: string;
   date: string;
@@ -5,6 +7,11 @@ export type ChangeLog = {
 };
 
 export const changeLog = [
+  {
+    version: "1.2.1",
+    date: "2026/01/27",
+    body: "絵文字編集中に閉じる際、ブラウザの確認ダイアログを表示するように",
+  },
   {
     version: "1.2.0",
     date: "2026/01/27",
