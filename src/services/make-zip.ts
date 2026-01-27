@@ -1,7 +1,7 @@
-import { BlobReader, BlobWriter, TextReader, ZipWriter } from '@zip.js/zip.js';
+import { BlobReader, BlobWriter, TextReader, ZipWriter } from "@zip.js/zip.js";
 
-import type { Emoji } from '../models/emoji';
-import { buildEmojiFileName, buildMeta } from './build-meta';
+import type { Emoji } from "../models/emoji";
+import { buildEmojiFileName, buildMeta } from "./build-meta";
 
 /**
  * 絵文字データからzipファイルを作成します。
@@ -11,8 +11,8 @@ import { buildEmojiFileName, buildMeta } from './build-meta';
 export const makeZip = (emojis: Emoji[]): Promise<Blob> => {
   // zipファイルには、メタデータであるmeta.jsonおよび、絵文字画像ファイルが含まれる
   const meta = JSON.stringify(buildMeta(emojis));
-  const zipWriter = new ZipWriter(new BlobWriter('application/zip'));
-  zipWriter.add('meta.json', new TextReader(meta));
+  const zipWriter = new ZipWriter(new BlobWriter("application/zip"));
+  zipWriter.add("meta.json", new TextReader(meta));
   for (const emoji of emojis) {
     const fileName = buildEmojiFileName(emoji.name, emoji.file.name);
     zipWriter.add(fileName, new BlobReader(emoji.file));

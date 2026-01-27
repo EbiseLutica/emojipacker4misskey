@@ -11,6 +11,7 @@ import "./App.scss";
 import { Help } from "./components/Help";
 import { ImportModal } from "./components/ImportModal";
 import { Changelog } from "./components/Changelog";
+import { changeLog } from "./changelog";
 
 function App() {
   const methods = useForm<FormValues>();
@@ -81,7 +82,7 @@ function App() {
       <main className="ep-root p-5 my-5">
         <header>
           <h1 className="fs-2">
-            Emoji Packer for Misskey <small>1.2.0</small>
+            Emoji Packer for Misskey <small>{changeLog[0].version}</small>
           </h1>
           <ul>
             <li>

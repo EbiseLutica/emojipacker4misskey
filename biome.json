@@ -16,7 +16,7 @@
 		"formatter": {
 			"indentStyle": "space",
 			"semicolons": "always",
-			"quoteStyle": "single",
+			"quoteStyle": "double",
 			"jsxQuoteStyle": "double"
 		}
 	}

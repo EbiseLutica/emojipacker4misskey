@@ -1,13 +1,13 @@
-import React from 'react';
+import React from "react";
 import {
   type FieldArrayWithId,
   type UseFieldArrayRemove,
   useFormContext,
-} from 'react-hook-form';
-import type { FormValues } from '../models/form-values';
+} from "react-hook-form";
+import type { FormValues } from "../models/form-values";
 
 export type SectionProps = {
-  field: FieldArrayWithId<FormValues, 'emojis', 'id'>;
+  field: FieldArrayWithId<FormValues, "emojis", "id">;
   index: number;
   remove: UseFieldArrayRemove;
 };
@@ -30,13 +30,13 @@ export const Section: React.FC<SectionProps> = (p) => {
       <td>
         <input
           {...register(`emojis.${p.index}.name`, {
-            required: '名前は必須です',
+            required: "名前は必須です",
             pattern: {
               value: /^[a-zA-Z0-9_]+$/,
-              message: '名前は英数字とアンダースコアのみ使用できます',
+              message: "名前は英数字とアンダースコアのみ使用できます",
             },
           })}
-          className={`form-control ${errors.emojis?.[p.index]?.name ? 'is-invalid' : ''}`}
+          className={`form-control ${errors.emojis?.[p.index]?.name ? "is-invalid" : ""}`}
           defaultValue={p.field.name}
           placeholder="名前"
         />

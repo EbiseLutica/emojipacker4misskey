@@ -1,11 +1,11 @@
-import { BlobReader, BlobWriter, ZipReader } from '@zip.js/zip.js';
-import type { Emoji } from '../models/emoji';
-import type { MetaData } from '../types/meta';
+import { BlobReader, BlobWriter, ZipReader } from "@zip.js/zip.js";
+import type { Emoji } from "../models/emoji";
+import type { MetaData } from "../types/meta";
 
 export interface ImportProgress {
   current: number;
   total: number;
-  stage: 'reading_meta' | 'loading_emojis';
+  stage: "reading_meta" | "loading_emojis";
   message: string;
 }
 
@@ -25,14 +25,14 @@ export const importZip = async (
   onProgress?.({
     current: 0,
     total: 1,
-    stage: 'reading_meta',
-    message: 'meta.jsonを読み込んでいます...',
+    stage: "reading_meta",
+    message: "meta.jsonを読み込んでいます...",
   });
 
   // meta.jsonを探す
-  const metaEntry = entries.find((entry) => entry.filename === 'meta.json');
+  const metaEntry = entries.find((entry) => entry.filename === "meta.json");
   if (!metaEntry || !metaEntry.getData) {
-    throw new Error('meta.jsonが見つかりません');
+    throw new Error("meta.jsonが見つかりません");
   }
 
   // meta.jsonを読み込む
@@ -50,7 +50,7 @@ export const importZip = async (
     onProgress?.({
       current: i,
       total: totalEmojis,
-      stage: 'loading_emojis',
+      stage: "loading_emojis",
       message: `絵文字を読み込んでいます... (${i + 1}/${totalEmojis})`,
     });
 
@@ -71,7 +71,7 @@ export const importZip = async (
       file,
       name: metaEmoji.emoji.name,
       category: metaEmoji.emoji.category,
-      tags: metaEmoji.emoji.aliases.join(' '),
+      tags: metaEmoji.emoji.aliases.join(" "),
       license: metaEmoji.emoji.license,
       localOnly: metaEmoji.emoji.localOnly,
       isSensitive: metaEmoji.emoji.isSensitive,
@@ -82,7 +82,7 @@ export const importZip = async (
   onProgress?.({
     current: totalEmojis,
     total: totalEmojis,
-    stage: 'loading_emojis',
+    stage: "loading_emojis",
     message: `絵文字の読み込みが完了しました (${totalEmojis}/${totalEmojis})`,
   });
 

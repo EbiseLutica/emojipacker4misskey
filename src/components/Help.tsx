@@ -1,4 +1,4 @@
-import imageHelp1 from '../assets/help-1.png';
+import imageHelp1 from "../assets/help-1.png";
 
 export const Help: React.FC = () => (
   <details>
