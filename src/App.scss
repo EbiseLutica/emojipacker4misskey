@@ -1,17 +1,37 @@
-@import 'bootstrap/scss/bootstrap';
+@import "bootstrap/scss/bootstrap";
 
 body {
-    background-color: rgb(248, 238, 237);
-    font-family: "Koruri", sans-serif;
+  background-color: rgb(248, 238, 237);
+  font-family: "Koruri", sans-serif;
 }
 
 .ep-root {
-    max-width: 1400px;
-    width: 100%;
-    margin: 0 auto;
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
 }
 
 .emoji {
-    height: 2em;
+  height: 2em;
 }
 
+.dropzone {
+  border: 2px dashed var(--bs-gray-700);
+  border-radius: 8px;
+  padding: 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    background-color 0.2s;
+
+  &:hover {
+    border-color: var(--bs-primary);
+    background-color: rgba(13, 110, 253, 0.05);
+  }
+
+  &.dropzone-active {
+    border-color: var(--bs-primary);
+    background-color: rgba(13, 110, 253, 0.1);
+  }
+}

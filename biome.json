@@ -4,12 +4,19 @@
 		"ignore": ["dist", "node_modules", ".pnpm-store"],
 		"include": ["src"]
 	},
+	"linter": {
+		"rules": {
+			"suspicious": {
+				"noArrayIndexKey": "off"
+			}
+		}
+	},
 	"javascript": {
 		"jsxRuntime": "reactClassic",
 		"formatter": {
 			"indentStyle": "space",
 			"semicolons": "always",
-			"quoteStyle": "single",
+			"quoteStyle": "double",
 			"jsxQuoteStyle": "double"
 		}
 	}
