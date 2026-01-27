@@ -1,20 +1,56 @@
-import React, { useState } from 'react';
-import { useFieldArray, useFormContext } from 'react-hook-form';
-import type { FormValues } from '../models/form-values';
-import { Section } from './Section';
+import React, { useState, useCallback } from "react";
+import { useFieldArray, useFormContext } from "react-hook-form";
+import { useDropzone } from "react-dropzone";
+import type { FormValues } from "../models/form-values";
+import { Section } from "./Section";
 
-export const SectionList: React.FC = () => {
-  const [bulkCategory, setBulkCategory] = useState('');
-  const [bulkTags, setBulkTags] = useState('');
-  const [bulkLicense, setBulkLicense] = useState('');
+interface SectionListProps {
+  onZipFile?: (file: File) => void;
+}
+
+export const SectionList: React.FC<SectionListProps> = ({ onZipFile }) => {
+  const [bulkCategory, setBulkCategory] = useState("");
+  const [bulkTags, setBulkTags] = useState("");
+  const [bulkLicense, setBulkLicense] = useState("");
 
   const { control } = useFormContext<FormValues>();
   const { fields, append, remove, update } = useFieldArray({
-    name: 'emojis',
+    name: "emojis",
     control,
   });
 
-  const bulkUpdate = (key: 'category' | 'tags' | 'license', value: string) => {
+  const onDrop = useCallback(
+    (acceptedFiles: File[]) => {
+      for (const file of acceptedFiles) {
+        if (file.name.endsWith(".zip")) {
+          onZipFile?.(file);
+        } else {
+          const name = file.name.replace(/\.[^/.]+$/, "");
+          append({
+            file,
+            name: name,
+            category: "",
+            tags: "",
+            license: "",
+            localOnly: false,
+            isSensitive: false,
+          });
+        }
+      }
+    },
+    [append, onZipFile],
+  );
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: {
+      "image/*": [],
+      "application/zip": [".zip"],
+      "application/x-zip-compressed": [".zip"],
+    },
+  });
+
+  const bulkUpdate = (key: "category" | "tags" | "license", value: string) => {
     if (
       !confirm(
         `${key}を全て「${value}」に変更します。\nこの操作は取り消せませんがよろしいですか？`,
@@ -26,10 +62,10 @@ export const SectionList: React.FC = () => {
     });
   };
 
-  const bulkUpdateBool = (key: 'localOnly' | 'isSensitive', value: boolean) => {
+  const bulkUpdateBool = (key: "localOnly" | "isSensitive", value: boolean) => {
     if (
       !confirm(
-        `${key}を全て${value ? 'オン' : 'オフ'}にします。\nこの操作は取り消せませんがよろしいですか？`,
+        `${key}を全て${value ? "オン" : "オフ"}にします。\nこの操作は取り消せませんがよろしいですか？`,
       )
     )
       return;
@@ -38,28 +74,23 @@ export const SectionList: React.FC = () => {
     });
   };
 
-  const handleFilePick = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files) return;
-
-    for (let i = 0; i < e.target.files.length; i++) {
-      const file = e.target.files[i];
-      // file.nameから拡張子を取り除いたものをnameに設定
-      const name = file.name.replace(/\.[^/.]+$/, '');
-
-      append({
-        file,
-        name: name,
-        category: '',
-        tags: '',
-        license: '',
-        localOnly: false,
-        isSensitive: false,
-      });
-    }
-  };
-
   return (
     <div className="vstack gap-3">
+      {/* アップロードボタン */}
+      <div
+        {...getRootProps()}
+        className={`dropzone ${isDragActive ? "dropzone-active" : ""}`}
+      >
+        <input {...getInputProps()} />
+        <p className="mb-0">
+          {isDragActive
+            ? "ここにドロップしてください"
+            : "ここにファイルをドロップするか、クリックしてファイルを選択"}
+        </p>
+        <small className="text-muted">画像またはZipファイルに対応</small>
+      </div>
+
+      {/* 一括編集ボタン */}
       <section className="rounded bg-body-secondary p-3">
         <details>
           <summary>
@@ -83,7 +114,7 @@ export const SectionList: React.FC = () => {
                 <button
                   type="button"
                   className="btn btn-primary"
-                  onClick={() => bulkUpdate('category', bulkCategory)}
+                  onClick={() => bulkUpdate("category", bulkCategory)}
                 >
                   変更
                 </button>
@@ -104,7 +135,7 @@ export const SectionList: React.FC = () => {
                 <button
                   type="button"
                   className="btn btn-primary"
-                  onClick={() => bulkUpdate('tags', bulkTags)}
+                  onClick={() => bulkUpdate("tags", bulkTags)}
                 >
                   変更
                 </button>
@@ -125,7 +156,7 @@ export const SectionList: React.FC = () => {
                 <button
                   type="button"
                   className="btn btn-primary"
-                  onClick={() => bulkUpdate('license', bulkLicense)}
+                  onClick={() => bulkUpdate("license", bulkLicense)}
                 >
                   変更
                 </button>
@@ -137,14 +168,14 @@ export const SectionList: React.FC = () => {
                 <button
                   type="button"
                   className="btn btn-success"
-                  onClick={() => bulkUpdateBool('localOnly', true)}
+                  onClick={() => bulkUpdateBool("localOnly", true)}
                 >
                   オン
                 </button>
                 <button
                   type="button"
                   className="btn btn-danger"
-                  onClick={() => bulkUpdateBool('localOnly', false)}
+                  onClick={() => bulkUpdateBool("localOnly", false)}
                 >
                   オフ
                 </button>
@@ -156,14 +187,14 @@ export const SectionList: React.FC = () => {
                 <button
                   type="button"
                   className="btn btn-success"
-                  onClick={() => bulkUpdateBool('isSensitive', true)}
+                  onClick={() => bulkUpdateBool("isSensitive", true)}
                 >
                   オン
                 </button>
                 <button
                   type="button"
                   className="btn btn-danger"
-                  onClick={() => bulkUpdateBool('isSensitive', false)}
+                  onClick={() => bulkUpdateBool("isSensitive", false)}
                 >
                   オフ
                 </button>
@@ -172,14 +203,6 @@ export const SectionList: React.FC = () => {
           </div>
         </details>
       </section>
-
-      <input
-        type="file"
-        accept="image/*"
-        multiple
-        className="form-control"
-        onChange={handleFilePick}
-      />
 
       <div className="table-responsive">
         <table className="table table-striped">
