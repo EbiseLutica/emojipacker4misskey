@@ -1,37 +1,37 @@
-import React, { useState, useCallback } from "react";
-import { useFieldArray, useFormContext } from "react-hook-form";
-import { useDropzone } from "react-dropzone";
-import type { FormValues } from "../models/form-values";
-import { Section } from "./Section";
+import React, { useState, useCallback } from 'react';
+import { useFieldArray, useFormContext } from 'react-hook-form';
+import { useDropzone } from 'react-dropzone';
+import type { FormValues } from '../models/form-values';
+import { Section } from './Section';
 
 interface SectionListProps {
   onZipFile?: (file: File) => void;
 }
 
 export const SectionList: React.FC<SectionListProps> = ({ onZipFile }) => {
-  const [bulkCategory, setBulkCategory] = useState("");
-  const [bulkTags, setBulkTags] = useState("");
-  const [bulkLicense, setBulkLicense] = useState("");
+  const [bulkCategory, setBulkCategory] = useState('');
+  const [bulkTags, setBulkTags] = useState('');
+  const [bulkLicense, setBulkLicense] = useState('');
 
   const { control } = useFormContext<FormValues>();
   const { fields, append, remove, update } = useFieldArray({
-    name: "emojis",
+    name: 'emojis',
     control,
   });
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
       for (const file of acceptedFiles) {
-        if (file.name.endsWith(".zip")) {
+        if (file.name.endsWith('.zip')) {
           onZipFile?.(file);
         } else {
-          const name = file.name.replace(/\.[^/.]+$/, "");
+          const name = file.name.replace(/\.[^/.]+$/, '');
           append({
             file,
             name: name,
-            category: "",
-            tags: "",
-            license: "",
+            category: '',
+            tags: '',
+            license: '',
             localOnly: false,
             isSensitive: false,
           });
@@ -44,13 +44,13 @@ export const SectionList: React.FC<SectionListProps> = ({ onZipFile }) => {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: {
-      "image/*": [],
-      "application/zip": [".zip"],
-      "application/x-zip-compressed": [".zip"],
+      'image/*': [],
+      'application/zip': ['.zip'],
+      'application/x-zip-compressed': ['.zip'],
     },
   });
 
-  const bulkUpdate = (key: "category" | "tags" | "license", value: string) => {
+  const bulkUpdate = (key: 'category' | 'tags' | 'license', value: string) => {
     if (
       !confirm(
         `${key}を全て「${value}」に変更します。\nこの操作は取り消せませんがよろしいですか？`,
@@ -62,10 +62,10 @@ export const SectionList: React.FC<SectionListProps> = ({ onZipFile }) => {
     });
   };
 
-  const bulkUpdateBool = (key: "localOnly" | "isSensitive", value: boolean) => {
+  const bulkUpdateBool = (key: 'localOnly' | 'isSensitive', value: boolean) => {
     if (
       !confirm(
-        `${key}を全て${value ? "オン" : "オフ"}にします。\nこの操作は取り消せませんがよろしいですか？`,
+        `${key}を全て${value ? 'オン' : 'オフ'}にします。\nこの操作は取り消せませんがよろしいですか？`,
       )
     )
       return;
@@ -79,13 +79,13 @@ export const SectionList: React.FC<SectionListProps> = ({ onZipFile }) => {
       {/* アップロードボタン */}
       <div
         {...getRootProps()}
-        className={`dropzone ${isDragActive ? "dropzone-active" : ""}`}
+        className={`dropzone ${isDragActive ? 'dropzone-active' : ''}`}
       >
         <input {...getInputProps()} />
         <p className="mb-0">
           {isDragActive
-            ? "ここにドロップしてください"
-            : "ここにファイルをドロップするか、クリックしてファイルを選択"}
+            ? 'ここにドロップしてください'
+            : 'ここにファイルをドロップするか、クリックしてファイルを選択'}
         </p>
         <small className="text-muted">画像またはZipファイルに対応</small>
       </div>
@@ -114,7 +114,7 @@ export const SectionList: React.FC<SectionListProps> = ({ onZipFile }) => {
                 <button
                   type="button"
                   className="btn btn-primary"
-                  onClick={() => bulkUpdate("category", bulkCategory)}
+                  onClick={() => bulkUpdate('category', bulkCategory)}
                 >
                   変更
                 </button>
@@ -135,7 +135,7 @@ export const SectionList: React.FC<SectionListProps> = ({ onZipFile }) => {
                 <button
                   type="button"
                   className="btn btn-primary"
-                  onClick={() => bulkUpdate("tags", bulkTags)}
+                  onClick={() => bulkUpdate('tags', bulkTags)}
                 >
                   変更
                 </button>
@@ -156,7 +156,7 @@ export const SectionList: React.FC<SectionListProps> = ({ onZipFile }) => {
                 <button
                   type="button"
                   className="btn btn-primary"
-                  onClick={() => bulkUpdate("license", bulkLicense)}
+                  onClick={() => bulkUpdate('license', bulkLicense)}
                 >
                   変更
                 </button>
@@ -168,14 +168,14 @@ export const SectionList: React.FC<SectionListProps> = ({ onZipFile }) => {
                 <button
                   type="button"
                   className="btn btn-success"
-                  onClick={() => bulkUpdateBool("localOnly", true)}
+                  onClick={() => bulkUpdateBool('localOnly', true)}
                 >
                   オン
                 </button>
                 <button
                   type="button"
                   className="btn btn-danger"
-                  onClick={() => bulkUpdateBool("localOnly", false)}
+                  onClick={() => bulkUpdateBool('localOnly', false)}
                 >
                   オフ
                 </button>
@@ -187,14 +187,14 @@ export const SectionList: React.FC<SectionListProps> = ({ onZipFile }) => {
                 <button
                   type="button"
                   className="btn btn-success"
-                  onClick={() => bulkUpdateBool("isSensitive", true)}
+                  onClick={() => bulkUpdateBool('isSensitive', true)}
                 >
                   オン
                 </button>
                 <button
                   type="button"
                   className="btn btn-danger"
-                  onClick={() => bulkUpdateBool("isSensitive", false)}
+                  onClick={() => bulkUpdateBool('isSensitive', false)}
                 >
                   オフ
                 </button>

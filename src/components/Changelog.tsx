@@ -13,7 +13,7 @@ export const Changelog: React.FC = () => (
       </thead>
       <tbody>
         {changeLog.map((log) => (
-          <tr>
+          <tr key={log.version}>
             <td>{log.version}</td>
             <td>{log.date}</td>
             <td>

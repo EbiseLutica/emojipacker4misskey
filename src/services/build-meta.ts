@@ -19,7 +19,10 @@ const getExtension = (filename: string): string => {
  * Misskeyのバリデーション(^[a-zA-Z0-9_]+?([a-zA-Z0-9\.]+)?$)に適合するよう、
  * 絵文字名をベースにしたファイル名を使用します。
  */
-export const buildEmojiFileName = (emojiName: string, originalFileName: string): string => {
+export const buildEmojiFileName = (
+  emojiName: string,
+  originalFileName: string,
+): string => {
   return emojiName + getExtension(originalFileName);
 };
 

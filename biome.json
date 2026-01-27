@@ -4,6 +4,13 @@
 		"ignore": ["dist", "node_modules", ".pnpm-store"],
 		"include": ["src"]
 	},
+	"linter": {
+		"rules": {
+			"suspicious": {
+				"noArrayIndexKey": "off"
+			}
+		}
+	},
 	"javascript": {
 		"jsxRuntime": "reactClassic",
 		"formatter": {

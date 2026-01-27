@@ -191,13 +191,10 @@ function App() {
           {importProgress ? (
             <>
               <p className="mb-2">{importProgress.message}</p>
-              <div
-                className="progress"
-                role="progressbar"
-                style={{ height: "25px" }}
-              >
+              <div className="progress" style={{ height: "25px" }}>
                 <div
                   className="progress-bar progress-bar-striped"
+                  role="progressbar"
                   style={{
                     width: `${Math.round((importProgress.current / importProgress.total) * 100)}%`,
                   }}

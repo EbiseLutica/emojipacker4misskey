@@ -1,5 +1,5 @@
-import { Modal, ListGroup, Badge } from 'react-bootstrap';
-import type { Emoji } from '../models/emoji';
+import { Modal, ListGroup, Badge } from "react-bootstrap";
+import type { Emoji } from "../models/emoji";
 
 interface ImportModalProps {
   show: boolean;
@@ -9,7 +9,13 @@ interface ImportModalProps {
   onAppend: () => void;
 }
 
-export const ImportModal = ({ show, emojis, onHide, onReplace, onAppend }: ImportModalProps) => {
+export const ImportModal = ({
+  show,
+  emojis,
+  onHide,
+  onReplace,
+  onAppend,
+}: ImportModalProps) => {
   return (
     <Modal show={show} onHide={onHide} size="lg">
       <Modal.Header closeButton>
@@ -17,16 +23,24 @@ export const ImportModal = ({ show, emojis, onHide, onReplace, onAppend }: Impor
       </Modal.Header>
       <Modal.Body>
         <p className="mb-3">
-          このパックには、<strong>{emojis.length}種の絵文字</strong>が含まれています
+          このパックには、<strong>{emojis.length}種の絵文字</strong>
+          が含まれています
         </p>
-        <div style={{ maxHeight: '300px', overflowY: 'auto' }} className="mb-3">
+        <div style={{ maxHeight: "300px", overflowY: "auto" }} className="mb-3">
           <ListGroup>
             {emojis.map((emoji, index) => (
-              <ListGroup.Item key={index} className="d-flex align-items-center gap-3">
+              <ListGroup.Item
+                key={index}
+                className="d-flex align-items-center gap-3"
+              >
                 <img
                   src={URL.createObjectURL(emoji.file)}
                   alt={emoji.name}
-                  style={{ width: '32px', height: '32px', objectFit: 'contain' }}
+                  style={{
+                    width: "32px",
+                    height: "32px",
+                    objectFit: "contain",
+                  }}
                 />
                 <div className="flex-grow-1">
                   <div className="fw-bold">:{emoji.name}:</div>
@@ -34,9 +48,15 @@ export const ImportModal = ({ show, emojis, onHide, onReplace, onAppend }: Impor
                     <small className="text-muted">{emoji.category}</small>
                   )}
                   {emoji.tags && (
-                  <div>
-                    <small className="text-muted">{emoji.tags.split(' ').map(t => <Badge bg="secondary" key={t} className="me-1">{t}</Badge>)}</small>
-                  </div>
+                    <div>
+                      <small className="text-muted">
+                        {emoji.tags.split(" ").map((t) => (
+                          <Badge bg="secondary" key={t} className="me-1">
+                            {t}
+                          </Badge>
+                        ))}
+                      </small>
+                    </div>
                   )}
                 </div>
               </ListGroup.Item>
@@ -44,11 +64,7 @@ export const ImportModal = ({ show, emojis, onHide, onReplace, onAppend }: Impor
           </ListGroup>
         </div>
         <div className="d-flex gap-2">
-          <button
-            type="button"
-            className="btn btn-danger"
-            onClick={onReplace}
-          >
+          <button type="button" className="btn btn-danger" onClick={onReplace}>
             現在のリストを破棄してから開く
           </button>
           <button
@@ -58,11 +74,7 @@ export const ImportModal = ({ show, emojis, onHide, onReplace, onAppend }: Impor
           >
             このリストを末尾にくっつける
           </button>
-          <button
-            type="button"
-            className="btn btn-secondary"
-            onClick={onHide}
-          >
+          <button type="button" className="btn btn-secondary" onClick={onHide}>
             やめる
           </button>
         </div>

@@ -17,7 +17,7 @@ export interface ImportProgress {
  */
 export const importZip = async (
   zipFile: File,
-  onProgress?: (progress: ImportProgress) => void
+  onProgress?: (progress: ImportProgress) => void,
 ): Promise<Emoji[]> => {
   const zipReader = new ZipReader(new BlobReader(zipFile));
   const entries = await zipReader.getEntries();
@@ -46,7 +46,7 @@ export const importZip = async (
 
   for (let i = 0; i < meta.emojis.length; i++) {
     const metaEmoji = meta.emojis[i];
-    
+
     onProgress?.({
       current: i,
       total: totalEmojis,
@@ -54,14 +54,18 @@ export const importZip = async (
       message: `絵文字を読み込んでいます... (${i + 1}/${totalEmojis})`,
     });
 
-    const fileEntry = entries.find((entry) => entry.filename === metaEmoji.fileName);
+    const fileEntry = entries.find(
+      (entry) => entry.filename === metaEmoji.fileName,
+    );
     if (!fileEntry || !fileEntry.getData) {
       console.warn(`ファイル ${metaEmoji.fileName} が見つかりません`);
       continue;
     }
 
     const fileBlob = await fileEntry.getData(new BlobWriter());
-    const file = new File([fileBlob], metaEmoji.fileName, { type: fileBlob.type });
+    const file = new File([fileBlob], metaEmoji.fileName, {
+      type: fileBlob.type,
+    });
 
     emojis.push({
       file,
