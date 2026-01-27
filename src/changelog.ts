@@ -1,5 +1,3 @@
-import { version } from "react";
-
 export type ChangeLog = {
   version: string;
   date: string;
