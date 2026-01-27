@@ -1,7 +1,7 @@
 import { BlobReader, BlobWriter, TextReader, ZipWriter } from '@zip.js/zip.js';
 
 import type { Emoji } from '../models/emoji';
-import { buildMeta } from './build-meta';
+import { buildEmojiFileName, buildMeta } from './build-meta';
 
 /**
  * 絵文字データからzipファイルを作成します。
@@ -14,7 +14,8 @@ export const makeZip = (emojis: Emoji[]): Promise<Blob> => {
   const zipWriter = new ZipWriter(new BlobWriter('application/zip'));
   zipWriter.add('meta.json', new TextReader(meta));
   for (const emoji of emojis) {
-    zipWriter.add(emoji.file.name, new BlobReader(emoji.file));
+    const fileName = buildEmojiFileName(emoji.name, emoji.file.name);
+    zipWriter.add(fileName, new BlobReader(emoji.file));
   }
   return zipWriter.close();
 };
