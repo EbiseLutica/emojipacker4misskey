@@ -106,9 +106,7 @@ function App() {
             </li>
             <li>
               なにか不具合がありましたら、お手数ですが
-              <a href="https://mk.shrimpia.network/@Lutica">
-                @Lutica@mk.shrimpia.network
-              </a>
+              <a href="https://mk.lutic.at/@Lutica">@Lutica@mk.lutic.at</a>
               までご連絡ください。
             </li>
           </ul>
