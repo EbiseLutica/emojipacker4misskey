@@ -7,11 +7,14 @@ type AboutDialogProps = {
   onHide: () => void;
 };
 
+const TITLE_ID = "about-dialog-title";
+
 /** サービスの説明、インポート方法、変更履歴、著作権表示をまとめたダイアログ。 */
 export const AboutDialog: React.FC<AboutDialogProps> = ({ show, onHide }) => (
   <Dialog
     show={show}
     onHide={onHide}
+    labelledBy={TITLE_ID}
     wide
     actions={
       <button type="button" className="lu-button" onClick={onHide}>
@@ -20,7 +23,7 @@ export const AboutDialog: React.FC<AboutDialogProps> = ({ show, onHide }) => (
     }
   >
     <div className="lu-prose">
-      <h3>Emoji Packer for Misskeyについて</h3>
+      <h3 id={TITLE_ID}>Emoji Packer for Misskeyについて</h3>
       <ul>
         <li>
           Misskeyの管理画面でつかえる絵文字一括インポート用zip形式を作成できます。

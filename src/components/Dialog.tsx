@@ -17,6 +17,8 @@ type DialogProps = {
   title?: string;
   /** title がないダイアログの読み上げ用の名前 */
   ariaLabel?: string;
+  /** title がないダイアログで、名前として参照する本文内の見出しの id */
+  labelledBy?: string;
   bodyClassName?: string;
   /** 既定の 560px では狭いときに、幅を 800px まで広げる */
   wide?: boolean;
@@ -33,6 +35,7 @@ export const Dialog: React.FC<DialogProps> = ({
   onHide,
   title,
   ariaLabel,
+  labelledBy,
   bodyClassName,
   wide,
   actions,
@@ -90,7 +93,7 @@ export const Dialog: React.FC<DialogProps> = ({
     <dialog
       ref={ref}
       className={`lu-dialog ${wide ? "ep-dialog-wide" : ""}`}
-      aria-labelledby={title ? titleId : undefined}
+      aria-labelledby={title ? titleId : labelledBy}
       aria-label={ariaLabel}
       onCancel={(e) => {
         e.preventDefault();
