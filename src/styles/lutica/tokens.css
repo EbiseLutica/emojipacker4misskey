@@ -4,20 +4,30 @@
   --panel: #f8eeed; /* Cards, form controls and inline code chips on background. */
   --panel-raised: #fff0ef; /* Surfaces that float above panel: dropdowns, popovers, modals (pair with shadow-md / shadow-lg). */
   --panel-button: #fffafa; /* Face of pressable controls: secondary buttons, unchecked checkboxes and radios, select boxes, the switch thumb (pair with shadow-control). */
-  --border: #9a7a7b; /* The off-state switch track. 3:1 or more against background, panel and panel-raised in both themes. */
-  --foreground: #393535; /* Body text on background, panel and panel-button. */
-  --foreground-strong: #000000; /* Headings, strong / b, table header cells on background and panel. */
-  --divider: #dcbcbc; /* Hairlines that only separate content: hr, table rows. Decorative, not for control outlines (use border there). */
+  --border: #9a7a7b; /* The off-state switch track. */
+  --foreground: #393535; /* Body text on background, panel and panel-button (light from lutica.net, 10.1:1 on background; dark 9.5:1 on panel). */
+  --foreground-strong: #000000; /* Headings, strong / b, table header cells on background and panel (lutica.net --strong-fg; 13.7:1 dark). */
+  --divider: #dcbcbc; /* Hairlines that only separate content: hr, table rows. */
   --dimmed: #495a6b; /* Secondary text on background and panel (5.9:1 light, 6.8:1 dark). */
-  --brand: #f24149; /* The Shrimpia red as-is: logo, app icon, decorative shapes and fills. Not for text on light background (3.1:1); use primary there. */
-  --primary: #d30e17; /* Primary buttons, star buttons, accents that carry meaning. Text on it: on-primary. */
-  --on-primary: #ffffff; /* Text and icons on a primary fill (5.5:1 light, 5.6:1 dark). */
+  --dimmed-bg: var(--dimmed); /* Fill of a de-emphasised button or chip. */
+  --dimmed-fg: #ffffff; /* Text and icons on dimmed-bg only. */
+  --brand: #f24149; /* The Shrimpia red as-is: logo, app icon, decorative shapes and fills. */
+  --primary: #d30e17; /* Primary buttons, star buttons, accents that carry meaning. */
+  --primary-bg: var(--primary); /* Fill of primary buttons, chips and checked controls, and the text selection. */
+  --primary-fg: #ffffff; /* Text and icons on primary-bg only (5.5:1 light, 5.6:1 dark). */
+  --on-primary: var(--primary-fg); /* Deprecated alias of primary-fg, kept so existing products keep working. */
   --link: var(--primary); /* Links on background and panel. */
   --success: #187a24; /* Success text, icons and fills. */
+  --success-bg: var(--success); /* Fill of a success button or chip. */
+  --success-fg: #ffffff; /* Text and icons on success-bg only. */
   --warning: #876300; /* Warning text, icons and fills. */
-  --danger: #9f070e; /* Error text, icons and fills. */
+  --warning-bg: var(--warning); /* Fill of a warning button or chip. */
+  --warning-fg: #ffffff; /* Text and icons on warning-bg only. */
+  --danger: #be0c15; /* Error text and icons on surfaces, and the hue of the danger Alert. */
+  --danger-bg: #33090d; /* Fill of danger buttons and chips: a red-tinted near-black, told apart from the primary fill by lightness and from everything else on the page by being the only dark control in the light theme. */
+  --danger-fg: var(--brand); /* Text and icons on danger-bg only (4.8:1 light, 5.0:1 dark). */
   --shadow-sm: 0 1px 2px rgba(60, 20, 22, 0.08); /* Resting cards and inputs on background. */
-  --shadow-control: inset 0 1px 0 rgba(255, 255, 255, 0.35), inset 0 -1px 0 rgba(60, 20, 22, 0.08), 0 1px 3px rgba(60, 20, 22, 0.14); /* Pressable controls on panel-button (or a primary / danger fill). Removed while pressed. */
+  --shadow-control: inset 0 1px 0 rgba(255, 255, 255, 0.42), inset 0 -1px 0 rgba(0, 0, 0, 0.18), 0 1px 3px rgba(60, 20, 22, 0.14); /* Pressable controls on panel-button (or a coloured fill): buttons, checkboxes, radios, select boxes, the switch thumb. */
   --shadow-inset: inset 0 1px 2px rgba(60, 20, 22, 0.14); /* Recessed wells: the text area inside a text field or textarea frame, on panel. */
   --shadow-md: 0 4px 12px rgba(60, 20, 22, 0.10); /* Dropdowns, popovers, the fixed header; on panel-raised. */
   --shadow-lg: 0 12px 32px rgba(60, 20, 22, 0.16); /* Modals, and cards on hover (card hover lift); on panel-raised. */
@@ -32,15 +42,25 @@
   --foreground-strong: #e1e1e1;
   --divider: #303046;
   --dimmed: #a59ea3;
+  --dimmed-bg: var(--dimmed);
+  --dimmed-fg: #000000;
   --brand: #f24149;
   --primary: var(--brand);
-  --on-primary: #000000;
+  --primary-bg: var(--primary);
+  --primary-fg: #000000;
+  --on-primary: var(--primary-fg);
   --link: var(--primary);
   --success: #6f8e4d;
+  --success-bg: var(--success);
+  --success-fg: #000000;
   --warning: #ecbd15;
+  --warning-bg: var(--warning);
+  --warning-fg: #000000;
   --danger: #f44336;
+  --danger-bg: #26080b;
+  --danger-fg: var(--brand);
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow-control: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-control: inset 0 1px 0 rgba(255, 255, 255, 0.12), inset 0 -1px 0 rgba(0, 0, 0, 0.25), 0 1px 3px rgba(0, 0, 0, 0.3);
   --shadow-inset: inset 0 1px 3px rgba(0, 0, 0, 0.45);
   --shadow-md: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 4px 12px rgba(0, 0, 0, 0.35);
   --shadow-lg: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 12px 32px rgba(0, 0, 0, 0.45);
@@ -60,7 +80,7 @@
   --radius-lg: 12px; /* Cards, modals, popovers. */
   --radius-full: 9999px; /* Pills, avatars, round icon buttons. */
   --size-control: 40px; /* Height of buttons, selects and single-line text fields. */
-  --size-control-sm: 32px; /* Height of small buttons (lu-button--sm), e.g. in the navbar. */
+  --size-control-sm: 32px; /* Height of small buttons (lu-button--sm), e.g. */
   --size-indicator: 20px; /* Checkbox and radio box. */
   --size-rim: 3px; /* The rim between a text field's frame and its recessed well. */
   --size-progress: 6px; /* Progress bar height. */

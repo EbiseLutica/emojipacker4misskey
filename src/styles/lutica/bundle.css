@@ -9,6 +9,14 @@
   --lu-duration-slow: 0.25s; /* glows, the checkbox stroke, progress */
 }
 
+/* ---------- Rim ----------
+   The light frame under a dark well reads thinner at the bottom, where shadow-control
+   darkens its last pixel, so the bottom rim is 1px wider to look even with the others. */
+
+:where(:root) {
+  --lu-rim-bottom: calc(var(--size-rim) + 1px);
+}
+
 /* ---------- Surface ----------
    Every surface hands its own colour down as --surface, so what sits on it
    (an Alert's tint) is built from the surface it really stands on.
@@ -51,15 +59,25 @@
     --foreground-strong: #e1e1e1;
     --divider: #303046;
     --dimmed: #a59ea3;
+    --dimmed-bg: var(--dimmed);
+    --dimmed-fg: #000000;
     --brand: #f24149;
     --primary: var(--brand);
-    --on-primary: #000000;
+    --primary-bg: var(--primary);
+    --primary-fg: #000000;
+    --on-primary: var(--primary-fg);
     --link: var(--primary);
     --success: #6f8e4d;
+    --success-bg: var(--success);
+    --success-fg: #000000;
     --warning: #ecbd15;
+    --warning-bg: var(--warning);
+    --warning-fg: #000000;
     --danger: #f44336;
+    --danger-bg: #26080b;
+    --danger-fg: var(--brand);
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-    --shadow-control: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 1px 3px rgba(0, 0, 0, 0.3);
+    --shadow-control: inset 0 1px 0 rgba(255, 255, 255, 0.12), inset 0 -1px 0 rgba(0, 0, 0, 0.25), 0 1px 3px rgba(0, 0, 0, 0.3);
     --shadow-inset: inset 0 1px 3px rgba(0, 0, 0, 0.45);
     --shadow-md: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 4px 12px rgba(0, 0, 0, 0.35);
     --shadow-lg: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 12px 32px rgba(0, 0, 0, 0.45);
@@ -79,8 +97,8 @@
   line-height: 1.5;
 }
 ::selection {
-  background: var(--primary);
-  color: var(--on-primary);
+  background: var(--primary-bg);
+  color: var(--primary-fg);
 }
 
 :where(h1, h2, h3, h4, h5, h6) {
@@ -299,22 +317,59 @@
 }
 
 .lu-button--primary {
-  background: var(--primary);
-  color: var(--on-primary);
+  background: var(--primary-bg);
+  color: var(--primary-fg);
 }
 .lu-button--primary:hover:not(:disabled) {
-  background: color-mix(in oklab, var(--primary) 88%, var(--foreground));
+  background: color-mix(in oklab, var(--primary-bg) 88%, var(--foreground));
 }
 .lu-button--primary:active:not(:disabled) {
-  background: color-mix(in oklab, var(--primary) 80%, var(--foreground));
+  background: color-mix(in oklab, var(--primary-bg) 80%, var(--foreground));
 }
 
+.lu-button--success {
+  background: var(--success-bg);
+  color: var(--success-fg);
+}
+.lu-button--success:hover:not(:disabled) {
+  background: color-mix(in oklab, var(--success-bg) 88%, var(--foreground));
+}
+.lu-button--success:active:not(:disabled) {
+  background: color-mix(in oklab, var(--success-bg) 80%, var(--foreground));
+}
+
+.lu-button--warning {
+  background: var(--warning-bg);
+  color: var(--warning-fg);
+}
+.lu-button--warning:hover:not(:disabled) {
+  background: color-mix(in oklab, var(--warning-bg) 88%, var(--foreground));
+}
+.lu-button--warning:active:not(:disabled) {
+  background: color-mix(in oklab, var(--warning-bg) 80%, var(--foreground));
+}
+
+.lu-button--dimmed {
+  background: var(--dimmed-bg);
+  color: var(--dimmed-fg);
+}
+.lu-button--dimmed:hover:not(:disabled) {
+  background: color-mix(in oklab, var(--dimmed-bg) 88%, var(--foreground));
+}
+.lu-button--dimmed:active:not(:disabled) {
+  background: color-mix(in oklab, var(--dimmed-bg) 80%, var(--foreground));
+}
+
+/* The face is near black, so foreground would barely move it: the red of the text lights it instead. */
 .lu-button--danger {
-  background: var(--danger);
-  color: var(--on-primary);
+  background: var(--danger-bg);
+  color: var(--danger-fg);
 }
 .lu-button--danger:hover:not(:disabled) {
-  background: color-mix(in oklab, var(--danger) 88%, var(--foreground));
+  background: color-mix(in oklab, var(--danger-bg) 82%, var(--danger-fg));
+}
+.lu-button--danger:active:not(:disabled) {
+  background: color-mix(in oklab, var(--danger-bg) 72%, var(--danger-fg));
 }
 
 .lu-button--ghost {
@@ -380,7 +435,7 @@
   grid-column: 1;
   box-sizing: border-box;
   width: auto;
-  margin: var(--size-rim);
+  margin: var(--size-rim) var(--size-rim) var(--lu-rim-bottom);
   border: none;
   border-radius: calc(var(--radius-md) - var(--size-rim));
   background: var(--panel);
@@ -392,7 +447,7 @@
   transition: box-shadow var(--lu-duration-slow) ease-out, color var(--lu-duration) ease-out;
 }
 .lu-textfield > input {
-  height: calc(var(--size-control) - 2 * var(--size-rim));
+  height: calc(var(--size-control) - var(--size-rim) - var(--lu-rim-bottom));
   padding: 0 calc(var(--space-3) - var(--size-rim));
   line-height: 1.5;
 }
@@ -722,7 +777,7 @@
   content: "";
   width: 14px;
   height: 14px;
-  background: var(--on-primary);
+  background: var(--primary-fg);
   --lu-check-glyph: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M2.5 7.5l3 3 6-7' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   /* Two mask layers: the glyph, intersected with a soft left-to-right wipe.
      The wipe sits off to the right when unchecked and slides in on check,
@@ -743,7 +798,7 @@
 }
 .lu-checkbox:checked,
 .lu-checkbox:indeterminate {
-  background: var(--primary);
+  background: var(--primary-bg);
 }
 .lu-checkbox:checked::before,
 .lu-checkbox:indeterminate::before {
@@ -762,12 +817,12 @@
   width: 8px;
   height: 8px;
   border-radius: var(--radius-full);
-  background: var(--on-primary);
+  background: var(--primary-fg);
   transform: scale(0);
   transition: transform var(--lu-duration-fast) ease-out;
 }
 .lu-radio:checked {
-  background: var(--primary);
+  background: var(--primary-bg);
 }
 .lu-radio:checked::before {
   transform: scale(1);
@@ -805,11 +860,11 @@
   transition: transform var(--lu-duration) ease-out, background-color var(--lu-duration) ease-out;
 }
 .lu-switch:checked {
-  background: var(--primary);
+  background: var(--primary-bg);
 }
 .lu-switch:checked::before {
   transform: translateX(16px);
-  background: var(--on-primary);
+  background: var(--primary-fg);
 }
 
 /* ---------- Navbar ----------
@@ -947,8 +1002,8 @@
   box-sizing: border-box;
   padding: var(--space-1) var(--space-2);
   border-radius: var(--radius-full);
-  background: var(--primary);
-  color: var(--on-primary);
+  background: var(--primary-bg);
+  color: var(--primary-fg);
   font-family: var(--font-sans);
   font-size: var(--text-tiny);
   font-weight: 600;
@@ -957,11 +1012,11 @@
   white-space: nowrap;
   vertical-align: middle;
 }
-.lu-chip--primary { background: var(--primary); }
-.lu-chip--success { background: var(--success); }
-.lu-chip--warning { background: var(--warning); }
-.lu-chip--danger  { background: var(--danger); }
-.lu-chip--dimmed  { background: var(--dimmed); }
+.lu-chip--primary { background: var(--primary-bg); color: var(--primary-fg); }
+.lu-chip--success { background: var(--success-bg); color: var(--success-fg); }
+.lu-chip--warning { background: var(--warning-bg); color: var(--warning-fg); }
+.lu-chip--danger  { background: var(--danger-bg);  color: var(--danger-fg); }
+.lu-chip--dimmed  { background: var(--dimmed-bg);  color: var(--dimmed-fg); }
 
 /* ---------- Card ----------
    The card level of Elevation: panel + shadow-sm + radius-lg. */
@@ -1663,7 +1718,7 @@
   align-items: center;
   gap: var(--space-2);
   min-width: 0;
-  padding: var(--size-rim);
+  padding: var(--size-rim) var(--size-rim) var(--lu-rim-bottom);
 }
 .lu-control__body > .lu-well {
   flex: 1 1 0;
@@ -1699,7 +1754,7 @@
 .lu-well {
   box-sizing: border-box;
   width: 100%;
-  height: calc(var(--size-control) - 2 * var(--size-rim));
+  height: calc(var(--size-control) - var(--size-rim) - var(--lu-rim-bottom));
   margin: 0;
   padding: 0 calc(var(--space-3) - var(--size-rim));
   border: none;
