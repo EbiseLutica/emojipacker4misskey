@@ -121,119 +121,123 @@ export const SectionList: React.FC<SectionListProps> = ({ onZipFile }) => {
             <h2 className="ep-summary-title">一括編集</h2>
           </summary>
           <div className="lu-stack lu-stack--gap-4 lu-mt-4">
-            <div
-              className="lu-control ep-bulk-field"
-              role="group"
-              aria-labelledby="bulkCategoryTitle"
-            >
-              <span className="lu-control__title" id="bulkCategoryTitle">
-                カテゴリ
-              </span>
-              <div className="lu-control__body">
-                <input
-                  className="lu-well"
-                  type="text"
-                  aria-label="カテゴリ"
-                  value={bulkCategory}
-                  onChange={(e) => setBulkCategory(e.target.value)}
-                />
-                <button
-                  type="button"
-                  className="lu-button lu-button--sm lu-button--ghost"
-                  onClick={() => bulkUpdate("category", bulkCategory)}
-                >
-                  変更
-                </button>
+            <div className="ep-bulk-fields">
+              <div
+                className="lu-control"
+                role="group"
+                aria-labelledby="bulkCategoryTitle"
+              >
+                <span className="lu-control__title" id="bulkCategoryTitle">
+                  カテゴリ
+                </span>
+                <div className="lu-control__body">
+                  <input
+                    className="lu-well"
+                    type="text"
+                    aria-label="カテゴリ"
+                    value={bulkCategory}
+                    onChange={(e) => setBulkCategory(e.target.value)}
+                  />
+                  <button
+                    type="button"
+                    className="lu-button lu-button--sm lu-button--ghost"
+                    onClick={() => bulkUpdate("category", bulkCategory)}
+                  >
+                    変更
+                  </button>
+                </div>
+              </div>
+              <div
+                className="lu-control"
+                role="group"
+                aria-labelledby="bulkTagsTitle"
+              >
+                <span className="lu-control__title" id="bulkTagsTitle">
+                  タグ
+                </span>
+                <div className="lu-control__body">
+                  <input
+                    className="lu-well"
+                    type="text"
+                    aria-label="タグ"
+                    value={bulkTags}
+                    onChange={(e) => setBulkTags(e.target.value)}
+                  />
+                  <button
+                    type="button"
+                    className="lu-button lu-button--sm lu-button--ghost"
+                    onClick={() => bulkUpdate("tags", bulkTags)}
+                  >
+                    変更
+                  </button>
+                </div>
+              </div>
+              <div
+                className="lu-control"
+                role="group"
+                aria-labelledby="bulkLicenseTitle"
+              >
+                <span className="lu-control__title" id="bulkLicenseTitle">
+                  ライセンス
+                </span>
+                <div className="lu-control__body">
+                  <input
+                    className="lu-well"
+                    type="text"
+                    aria-label="ライセンス"
+                    value={bulkLicense}
+                    onChange={(e) => setBulkLicense(e.target.value)}
+                  />
+                  <button
+                    type="button"
+                    className="lu-button lu-button--sm lu-button--ghost"
+                    onClick={() => bulkUpdate("license", bulkLicense)}
+                  >
+                    変更
+                  </button>
+                </div>
               </div>
             </div>
-            <div
-              className="lu-control ep-bulk-field"
-              role="group"
-              aria-labelledby="bulkTagsTitle"
-            >
-              <span className="lu-control__title" id="bulkTagsTitle">
-                タグ
-              </span>
-              <div className="lu-control__body">
-                <input
-                  className="lu-well"
-                  type="text"
-                  aria-label="タグ"
-                  value={bulkTags}
-                  onChange={(e) => setBulkTags(e.target.value)}
-                />
-                <button
-                  type="button"
-                  className="lu-button lu-button--sm lu-button--ghost"
-                  onClick={() => bulkUpdate("tags", bulkTags)}
-                >
-                  変更
-                </button>
+            <div className="lu-stack lu-stack--horizontal lu-stack--wrap lu-stack--gap-8">
+              <div>
+                <div className="lu-text-small lu-text-bold lu-mb-1">
+                  ローカルのみ
+                </div>
+                <div className="lu-stack lu-stack--horizontal lu-stack--gap-4">
+                  <button
+                    type="button"
+                    className="lu-button"
+                    onClick={() => bulkUpdateBool("localOnly", true)}
+                  >
+                    オン
+                  </button>
+                  <button
+                    type="button"
+                    className="lu-button"
+                    onClick={() => bulkUpdateBool("localOnly", false)}
+                  >
+                    オフ
+                  </button>
+                </div>
               </div>
-            </div>
-            <div
-              className="lu-control ep-bulk-field"
-              role="group"
-              aria-labelledby="bulkLicenseTitle"
-            >
-              <span className="lu-control__title" id="bulkLicenseTitle">
-                ライセンス
-              </span>
-              <div className="lu-control__body">
-                <input
-                  className="lu-well"
-                  type="text"
-                  aria-label="ライセンス"
-                  value={bulkLicense}
-                  onChange={(e) => setBulkLicense(e.target.value)}
-                />
-                <button
-                  type="button"
-                  className="lu-button lu-button--sm lu-button--ghost"
-                  onClick={() => bulkUpdate("license", bulkLicense)}
-                >
-                  変更
-                </button>
-              </div>
-            </div>
-            <div>
-              <div className="lu-text-small lu-text-bold lu-mb-1">
-                ローカルのみ
-              </div>
-              <div className="lu-stack lu-stack--horizontal lu-stack--gap-4">
-                <button
-                  type="button"
-                  className="lu-button"
-                  onClick={() => bulkUpdateBool("localOnly", true)}
-                >
-                  オン
-                </button>
-                <button
-                  type="button"
-                  className="lu-button"
-                  onClick={() => bulkUpdateBool("localOnly", false)}
-                >
-                  オフ
-                </button>
-              </div>
-            </div>
-            <div>
-              <div className="lu-text-small lu-text-bold lu-mb-1">NSFW</div>
-              <div className="lu-stack lu-stack--horizontal lu-stack--gap-4">
-                <button
-                  type="button"
-                  className="lu-button"
-                  onClick={() => bulkUpdateBool("isSensitive", true)}
-                >
-                  オン
-                </button>
-                <button
-                  type="button"
-                  className="lu-button"
-                  onClick={() => bulkUpdateBool("isSensitive", false)}
-                >
-                  オフ
-                </button>
+              <div>
+                <div className="lu-text-small lu-text-bold lu-mb-1">NSFW</div>
+                <div className="lu-stack lu-stack--horizontal lu-stack--gap-4">
+                  <button
+                    type="button"
+                    className="lu-button"
+                    onClick={() => bulkUpdateBool("isSensitive", true)}
+                  >
+                    オン
+                  </button>
+                  <button
+                    type="button"
+                    className="lu-button"
+                    onClick={() => bulkUpdateBool("isSensitive", false)}
+                  >
+                    オフ
+                  </button>
+                </div>
               </div>
             </div>
           </div>
