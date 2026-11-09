@@ -19,6 +19,7 @@ import { CURRENT_VERSION } from "./changelog";
 function App() {
   const methods = useForm<FormValues>();
   const [isAboutModalShown, setAboutModalShown] = useState(false);
+  const [aboutScrollsToChangelog, setAboutScrollsToChangelog] = useState(false);
   const [isDownloadedModalShown, setDownloadedModalShown] = useState(false);
   const [isImportErrorModalShown, setImportErrorModalShown] = useState(false);
   const [importErrorMessage, setImportErrorMessage] = useState("");
@@ -28,6 +29,11 @@ function App() {
     null,
   );
   const [importedEmojis, setImportedEmojis] = useState<Emoji[]>([]);
+
+  const openAbout = (scrollToChangelog: boolean) => {
+    setAboutScrollsToChangelog(scrollToChangelog);
+    setAboutModalShown(true);
+  };
 
   const onValid: SubmitHandler<FormValues> = async ({ emojis }) => {
     const zippedBlob = await makeZip(emojis);
@@ -98,14 +104,23 @@ function App() {
       <header className="lu-navbar lu-navbar--fixed">
         <div className="lu-navbar__inner">
           <h1 className="lu-navbar__brand">
-            Emoji Packer<small>{CURRENT_VERSION}</small>
+            Emoji Packer
+            <button
+              className="ep-version-link"
+              type="button"
+              aria-haspopup="dialog"
+              aria-label={`${CURRENT_VERSION} の変更履歴を開く`}
+              onClick={() => openAbout(true)}
+            >
+              <small>{CURRENT_VERSION}</small>
+            </button>
           </h1>
           <nav className="lu-navbar__items">
             <button
               className="lu-button lu-button--sm"
               type="button"
               aria-haspopup="dialog"
-              onClick={() => setAboutModalShown(true)}
+              onClick={() => openAbout(false)}
             >
               About
             </button>
@@ -132,6 +147,7 @@ function App() {
       <AboutDialog
         show={isAboutModalShown}
         onHide={() => setAboutModalShown(false)}
+        scrollToChangelog={aboutScrollsToChangelog}
       />
       <Dialog
         show={isDownloadedModalShown}

@@ -11,6 +11,34 @@ body {
   padding-top: var(--size-navbar);
 }
 
+/* 文字は小さいままで、タップできる範囲だけ周囲の余白まで広げる */
+.ep-version-link {
+  appearance: none;
+  margin: calc(-1 * var(--space-2));
+  padding: var(--space-2);
+  border: none;
+  background: none;
+  color: var(--link);
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: -2px;
+    border-radius: var(--radius-sm);
+  }
+}
+
+.ep-about-changelog {
+  scroll-margin-top: var(--space-6);
+
+  &:focus {
+    outline: none;
+  }
+}
+
 .emoji {
   height: 2em;
 }
