@@ -7,8 +7,9 @@ body {
 }
 
 .dropzone {
-  border: 2px dashed var(--border);
   border-radius: var(--radius-md);
+  background: var(--panel);
+  box-shadow: var(--shadow-inset);
   padding: var(--space-8);
   text-align: center;
   cursor: pointer;
