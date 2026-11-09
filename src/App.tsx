@@ -3,18 +3,23 @@ import type { FormValues } from "./models/form-values";
 import { SectionList } from "./components/SectionList";
 import { makeZip } from "./services/make-zip";
 import { importZip, type ImportProgress } from "./services/import-zip";
-import { Modal } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import type { Emoji } from "./models/emoji";
 
+import "./styles/lutica/tokens.css";
+import "./styles/lutica/bundle.css";
 import "./App.scss";
-import { Help } from "./components/Help";
+import { AboutDialog } from "./components/AboutDialog";
+import { Dialog } from "./components/Dialog";
+import { HowToImport } from "./components/HowToImport";
 import { ImportModal } from "./components/ImportModal";
-import { Changelog } from "./components/Changelog";
-import { changeLog } from "./changelog";
+import { ThemeToggle } from "./components/ThemeToggle";
+import { CURRENT_VERSION } from "./changelog";
 
 function App() {
   const methods = useForm<FormValues>();
+  const [isAboutModalShown, setAboutModalShown] = useState(false);
+  const [aboutScrollsToChangelog, setAboutScrollsToChangelog] = useState(false);
   const [isDownloadedModalShown, setDownloadedModalShown] = useState(false);
   const [isImportErrorModalShown, setImportErrorModalShown] = useState(false);
   const [importErrorMessage, setImportErrorMessage] = useState("");
@@ -24,6 +29,11 @@ function App() {
     null,
   );
   const [importedEmojis, setImportedEmojis] = useState<Emoji[]>([]);
+
+  const openAbout = (scrollToChangelog: boolean) => {
+    setAboutScrollsToChangelog(scrollToChangelog);
+    setAboutModalShown(true);
+  };
 
   const onValid: SubmitHandler<FormValues> = async ({ emojis }) => {
     const zippedBlob = await makeZip(emojis);
@@ -91,33 +101,41 @@ function App() {
 
   return (
     <div>
-      <main className="ep-root p-5 my-5">
-        <header>
-          <h1 className="fs-2">
-            Emoji Packer for Misskey <small>{changeLog[0].version}</small>
+      <header className="lu-navbar lu-navbar--fixed">
+        <div className="lu-navbar__inner">
+          <h1 className="lu-navbar__brand">
+            Emoji Packer
+            <button
+              className="ep-version-link"
+              type="button"
+              aria-haspopup="dialog"
+              aria-label={`${CURRENT_VERSION} の変更履歴を開く`}
+              onClick={() => openAbout(true)}
+            >
+              <small>{CURRENT_VERSION}</small>
+            </button>
           </h1>
-          <ul>
-            <li>
-              複数の絵文字画像を、Misskeyで使える絵文字インポート用のzipファイルに変換するサービスです。
-            </li>
-            <li>Misskey 2024.8.0-2025.12.0 で動作確認しています。</li>
-            <li>
-              お使いの端末で完結しており、アップロードした画像や入力値は外部サーバー等に一切送信されません。
-            </li>
-            <li>
-              なにか不具合がありましたら、お手数ですが
-              <a href="https://mk.lutic.at/@Lutica">@Lutica@mk.lutic.at</a>
-              までご連絡ください。
-            </li>
-          </ul>
-        </header>
+          <nav className="lu-navbar__items">
+            <button
+              className="lu-button lu-button--sm"
+              type="button"
+              aria-haspopup="dialog"
+              onClick={() => openAbout(false)}
+            >
+              About
+            </button>
+          </nav>
+          <ThemeToggle />
+        </div>
+      </header>
+      <main className="lu-container lu-container--wide lu-my-12">
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onValid)}>
             <SectionList onZipFile={handleZipFile} />
-            <div className="d-flex gap-3 justify-content-center mt-5">
+            <div className="lu-stack lu-stack--horizontal lu-stack--justify-center lu-mt-12">
               <button
                 type="submit"
-                className="btn btn-primary px-5 fs-5"
+                className="lu-button lu-button--primary lu-px-12"
                 disabled={!count}
               >
                 絵文字パックを生成
@@ -126,102 +144,94 @@ function App() {
           </form>
         </FormProvider>
       </main>
-      <div className="ep-root p-5 my-5">
-        <Help />
-        <Changelog />
-      </div>
-      <footer className="text-center my-5 text-muted">
-        (C) 2024-2026 Ebise Lutica |{" "}
-        <a
-          href="https://github.com/EbiseLutica/emojipacker4misskey.git"
-          target="_blank"
-          rel="noreferrer noopener"
-        >
-          GitHub
-        </a>
-      </footer>
-      <Modal
+      <AboutDialog
+        show={isAboutModalShown}
+        onHide={() => setAboutModalShown(false)}
+        scrollToChangelog={aboutScrollsToChangelog}
+      />
+      <Dialog
         show={isDownloadedModalShown}
         onHide={() => setDownloadedModalShown(false)}
+        title="完成！！"
+        actions={
+          <button
+            type="button"
+            className="lu-button"
+            onClick={() => setDownloadedModalShown(false)}
+          >
+            閉じる
+          </button>
+        }
       >
-        <Modal.Header closeButton>
-          <Modal.Title>絵文字パックをダウンロードしました。</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <p>
-            ダウンロードされたzipファイルをMisskeyのカスタム絵文字管理画面でインポートしてください。
-          </p>
-          <p>Emoji Packerがお役に立ちましたら、SNSでのシェアをお願いします！</p>
-          <div className="hstack gap-3 mb-3">
-            <a
-              href="https://github.com/EbiseLutica/emojipacker4misskey"
-              className="btn btn-outline-primary"
-              target="_blank"
-              rel="noreferrer noopener"
-            >
-              GitHubでStar
-            </a>
-            <a
-              href="https://misskey-hub.net/share/?text=Emoji+Packer+for+Misskey%E3%82%92%E4%BD%BF%E3%81%A3%E3%81%A6%E3%81%BF%E3%81%BE%E3%81%97%E3%81%9F+%23emojipacker&url=https:%2F%2Femojipacker.lutic.at&visibility=public&localOnly=0&manualInstance=mk.shrimpia.network"
-              className="btn btn-outline-primary"
-              target="_blank"
-              rel="noreferrer noopener"
-            >
-              Misskeyでシェア
-            </a>
-          </div>
-          <Help />
-        </Modal.Body>
-      </Modal>
-      <Modal
+        <p>
+          お疲れ様でした。ダウンロードされたzipファイルを、Misskeyのカスタム絵文字管理画面でインポートしてください。
+        </p>
+        <p>Emoji Packerがお役に立ちましたら、SNSでシェアしていただけるととても嬉しいです～。</p>
+        <div className="lu-stack lu-stack--horizontal lu-stack--wrap lu-stack--gap-3 lu-mb-4">
+          <a
+            href="https://misskey-hub.net/share/?text=Emoji+Packer+for+Misskey%E3%82%92%E4%BD%BF%E3%81%A3%E3%81%A6%E3%81%BF%E3%81%BE%E3%81%97%E3%81%9F+%23emojipacker&url=https:%2F%2Femojipacker.lutic.at&visibility=public&localOnly=0"
+            className="lu-button"
+            target="_blank"
+            rel="noreferrer noopener"
+          >
+            Misskeyでシェア
+          </a>
+          <a
+            href="https://github.com/EbiseLutica/emojipacker4misskey"
+            className="lu-button"
+            target="_blank"
+            rel="noreferrer noopener"
+          >
+            GitHubでスター
+          </a>
+        </div>
+        
+        <details>
+          <summary>Misskeyへのインポート方法</summary>
+          <HowToImport />
+        </details>
+      </Dialog>
+      <Dialog
         show={isImportErrorModalShown}
         onHide={() => setImportErrorModalShown(false)}
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>インポートエラー</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <p>{importErrorMessage}</p>
-          <p>正しい形式のzipファイルを選択してください。</p>
-        </Modal.Body>
-      </Modal>
-      <Modal
-        show={isImportLoadingShown}
-        centered
-        backdrop="static"
-        keyboard={false}
-      >
-        <Modal.Body className="text-center py-5">
-          <div
-            className="spinner-border text-primary mb-3"
-            role="status"
-            style={{ width: "3rem", height: "3rem" }}
+        title="インポートに失敗しました"
+        actions={
+          <button
+            type="button"
+            className="lu-button"
+            onClick={() => setImportErrorModalShown(false)}
           >
-            <span className="visually-hidden">読み込み中...</span>
-          </div>
-          {importProgress ? (
-            <>
-              <p className="mb-2">{importProgress.message}</p>
-              <div className="progress" style={{ height: "25px" }}>
-                <div
-                  className="progress-bar progress-bar-striped"
-                  role="progressbar"
-                  style={{
-                    width: `${Math.round((importProgress.current / importProgress.total) * 100)}%`,
-                  }}
-                  aria-valuenow={importProgress.current}
-                  aria-valuemin={0}
-                  aria-valuemax={importProgress.total}
-                >
-                  {importProgress.current} / {importProgress.total}
-                </div>
-              </div>
-            </>
-          ) : (
-            <p className="mb-0">zipファイルを読み込み中...</p>
-          )}
-        </Modal.Body>
-      </Modal>
+            閉じる
+          </button>
+        }
+      >
+        <p>正しい形式のzipファイルを選択してください。</p>
+        <p>エラー: {importErrorMessage}</p>
+      </Dialog>
+      <Dialog
+        show={isImportLoadingShown}
+        ariaLabel="読み込み中"
+        bodyClassName="lu-text-center"
+      >
+        <span className="lu-spinner" role="status" aria-label="読み込み中" />
+        {importProgress ? (
+          <>
+            <p className="lu-mt-3 lu-mb-2">{importProgress.message}</p>
+            <progress
+              className="lu-progress"
+              value={importProgress.current}
+              max={importProgress.total}
+            >
+              {importProgress.current} / {importProgress.total}
+            </progress>
+            <div className="lu-text-small lu-text-dimmed lu-mt-1">
+              {importProgress.current} / {importProgress.total}
+            </div>
+          </>
+        ) : (
+          <p className="lu-mt-3">zipファイルを読み込み中...</p>
+        )}
+      </Dialog>
       <ImportModal
         show={isImportModalShown}
         emojis={importedEmojis}

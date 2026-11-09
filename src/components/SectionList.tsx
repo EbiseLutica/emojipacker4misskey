@@ -2,7 +2,25 @@ import React, { useState, useCallback } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { useDropzone } from "react-dropzone";
 import type { FormValues } from "../models/form-values";
+import { Dialog } from "./Dialog";
 import { Section } from "./Section";
+import { handleTableArrowKeys } from "./table-arrow-keys";
+
+type BulkTextKey = "category" | "tags" | "license";
+type BulkBoolKey = "localOnly" | "isSensitive";
+
+/** 確認ダイアログで実行を待っている一括編集 */
+type PendingBulk =
+  | { type: "text"; key: BulkTextKey; value: string }
+  | { type: "bool"; key: BulkBoolKey; value: boolean };
+
+const bulkLabels: Record<BulkTextKey | BulkBoolKey, string> = {
+  category: "カテゴリ",
+  tags: "タグ",
+  license: "ライセンス",
+  localOnly: "ローカルのみ",
+  isSensitive: "NSFW",
+};
 
 interface SectionListProps {
   onZipFile?: (file: File) => void;
@@ -12,9 +30,10 @@ export const SectionList: React.FC<SectionListProps> = ({ onZipFile }) => {
   const [bulkCategory, setBulkCategory] = useState("");
   const [bulkTags, setBulkTags] = useState("");
   const [bulkLicense, setBulkLicense] = useState("");
+  const [pendingBulk, setPendingBulk] = useState<PendingBulk | null>(null);
 
-  const { control } = useFormContext<FormValues>();
-  const { fields, append, remove, update } = useFieldArray({
+  const { control, getValues, setValue } = useFormContext<FormValues>();
+  const { fields, append, remove } = useFieldArray({
     name: "emojis",
     control,
   });
@@ -50,162 +69,184 @@ export const SectionList: React.FC<SectionListProps> = ({ onZipFile }) => {
     },
   });
 
-  const bulkUpdate = (key: "category" | "tags" | "license", value: string) => {
-    if (
-      !confirm(
-        `${key}を全て「${value}」に変更します。\nこの操作は取り消せませんがよろしいですか？`,
-      )
-    )
-      return;
-    fields.forEach((field, index) => {
-      update(index, { ...field, [key]: value });
-    });
+  const bulkUpdate = (key: BulkTextKey, value: string) => {
+    setPendingBulk({ type: "text", key, value });
   };
 
-  const bulkUpdateBool = (key: "localOnly" | "isSensitive", value: boolean) => {
-    if (
-      !confirm(
-        `${key}を全て${value ? "オン" : "オフ"}にします。\nこの操作は取り消せませんがよろしいですか？`,
-      )
-    )
-      return;
-    fields.forEach((field, index) => {
-      update(index, { ...field, [key]: value });
+  const bulkUpdateBool = (key: BulkBoolKey, value: boolean) => {
+    setPendingBulk({ type: "bool", key, value });
+  };
+
+  // fields は手入力を反映しないので、getValues の現在値を見て該当の項目だけを書き換える
+  const applyBulkText = (
+    { key, value }: Extract<PendingBulk, { type: "text" }>,
+    onlyBlank: boolean,
+  ) => {
+    (getValues("emojis") ?? []).forEach((emoji, index) => {
+      if (onlyBlank && emoji[key]?.trim()) return;
+      setValue(`emojis.${index}.${key}`, value);
     });
+    setPendingBulk(null);
+  };
+
+  const applyBulkBool = ({
+    key,
+    value,
+  }: Extract<PendingBulk, { type: "bool" }>) => {
+    (getValues("emojis") ?? []).forEach((_, index) => {
+      setValue(`emojis.${index}.${key}`, value);
+    });
+    setPendingBulk(null);
   };
 
   return (
-    <div className="vstack gap-3">
+    <div className="lu-stack lu-stack--gap-4">
       {/* アップロードボタン */}
       <div
         {...getRootProps()}
         className={`dropzone ${isDragActive ? "dropzone-active" : ""}`}
       >
         <input {...getInputProps()} />
-        <p className="mb-0">
+        <p className="lu-my-0">
           {isDragActive
             ? "ここにドロップしてください"
-            : "ここにファイルをドロップするか、クリックしてファイルを選択"}
+            : "クリックするか、ファイルをドロップ"}
         </p>
-        <small className="text-muted">画像またはZipファイルに対応</small>
+        <small className="lu-text-dimmed">画像またはZipファイルに対応</small>
       </div>
 
       {/* 一括編集ボタン */}
-      <section className="rounded bg-body-secondary p-3">
+      <section className="lu-card">
         <details>
           <summary>
-            <h2 className="d-inline fs-5 mb-4 text-muted user-select-none">
-              一括編集
-            </h2>
+            <h2 className="ep-summary-title">一括編集</h2>
           </summary>
-          <div className="vstack gap-3 mt-3">
-            <div>
-              <label htmlFor="inputCategory" className="fs-6">
-                カテゴリ
-              </label>
-              <div className="hstack gap-3">
-                <input
-                  id="inputCategory"
-                  type="text"
-                  className="form-control w-25"
-                  value={bulkCategory}
-                  onChange={(e) => setBulkCategory(e.target.value)}
-                />
-                <button
-                  type="button"
-                  className="btn btn-primary"
-                  onClick={() => bulkUpdate("category", bulkCategory)}
-                >
-                  変更
-                </button>
+          <div className="lu-stack lu-stack--gap-4 lu-mt-4">
+            <div className="ep-bulk-fields">
+              <div
+                className="lu-control"
+                role="group"
+                aria-labelledby="bulkCategoryTitle"
+              >
+                <span className="lu-control__title" id="bulkCategoryTitle">
+                  カテゴリ
+                </span>
+                <div className="lu-control__body">
+                  <input
+                    className="lu-well"
+                    type="text"
+                    aria-label="カテゴリ"
+                    value={bulkCategory}
+                    onChange={(e) => setBulkCategory(e.target.value)}
+                  />
+                  <button
+                    type="button"
+                    className="lu-button lu-button--sm lu-button--ghost"
+                    onClick={() => bulkUpdate("category", bulkCategory)}
+                  >
+                    変更
+                  </button>
+                </div>
+              </div>
+              <div
+                className="lu-control"
+                role="group"
+                aria-labelledby="bulkTagsTitle"
+              >
+                <span className="lu-control__title" id="bulkTagsTitle">
+                  タグ
+                </span>
+                <div className="lu-control__body">
+                  <input
+                    className="lu-well"
+                    type="text"
+                    aria-label="タグ"
+                    value={bulkTags}
+                    onChange={(e) => setBulkTags(e.target.value)}
+                  />
+                  <button
+                    type="button"
+                    className="lu-button lu-button--sm lu-button--ghost"
+                    onClick={() => bulkUpdate("tags", bulkTags)}
+                  >
+                    変更
+                  </button>
+                </div>
+              </div>
+              <div
+                className="lu-control"
+                role="group"
+                aria-labelledby="bulkLicenseTitle"
+              >
+                <span className="lu-control__title" id="bulkLicenseTitle">
+                  ライセンス
+                </span>
+                <div className="lu-control__body">
+                  <input
+                    className="lu-well"
+                    type="text"
+                    aria-label="ライセンス"
+                    value={bulkLicense}
+                    onChange={(e) => setBulkLicense(e.target.value)}
+                  />
+                  <button
+                    type="button"
+                    className="lu-button lu-button--sm lu-button--ghost"
+                    onClick={() => bulkUpdate("license", bulkLicense)}
+                  >
+                    変更
+                  </button>
+                </div>
               </div>
             </div>
-            <div>
-              <label htmlFor="inputTags" className="fs-6">
-                タグ
-              </label>
-              <div className="hstack gap-3">
-                <input
-                  id="inputTags"
-                  type="text"
-                  className="form-control w-25"
-                  value={bulkTags}
-                  onChange={(e) => setBulkTags(e.target.value)}
-                />
-                <button
-                  type="button"
-                  className="btn btn-primary"
-                  onClick={() => bulkUpdate("tags", bulkTags)}
-                >
-                  変更
-                </button>
+            <div className="lu-stack lu-stack--horizontal lu-stack--wrap lu-stack--gap-8">
+              <div>
+                <div className="lu-text-small lu-text-bold lu-mb-1">
+                  ローカルのみ
+                </div>
+                <div className="lu-stack lu-stack--horizontal lu-stack--gap-4">
+                  <button
+                    type="button"
+                    className="lu-button lu-button--success"
+                    onClick={() => bulkUpdateBool("localOnly", true)}
+                  >
+                    オン
+                  </button>
+                  <button
+                    type="button"
+                    className="lu-button lu-button--primary"
+                    onClick={() => bulkUpdateBool("localOnly", false)}
+                  >
+                    オフ
+                  </button>
+                </div>
               </div>
-            </div>
-            <div>
-              <label htmlFor="inputLicense" className="fs-6">
-                ライセンス
-              </label>
-              <div className="hstack gap-3">
-                <input
-                  id="inputLicense"
-                  type="text"
-                  className="form-control w-25"
-                  value={bulkLicense}
-                  onChange={(e) => setBulkLicense(e.target.value)}
-                />
-                <button
-                  type="button"
-                  className="btn btn-primary"
-                  onClick={() => bulkUpdate("license", bulkLicense)}
-                >
-                  変更
-                </button>
-              </div>
-            </div>
-            <div>
-              <label className="fs-6">ローカルのみ</label>
-              <div className="hstack gap-3">
-                <button
-                  type="button"
-                  className="btn btn-success"
-                  onClick={() => bulkUpdateBool("localOnly", true)}
-                >
-                  オン
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-danger"
-                  onClick={() => bulkUpdateBool("localOnly", false)}
-                >
-                  オフ
-                </button>
-              </div>
-            </div>
-            <div>
-              <label className="fs-6">NSFW</label>
-              <div className="hstack gap-3">
-                <button
-                  type="button"
-                  className="btn btn-success"
-                  onClick={() => bulkUpdateBool("isSensitive", true)}
-                >
-                  オン
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-danger"
-                  onClick={() => bulkUpdateBool("isSensitive", false)}
-                >
-                  オフ
-                </button>
+              <div>
+                <div className="lu-text-small lu-text-bold lu-mb-1">NSFW</div>
+                <div className="lu-stack lu-stack--horizontal lu-stack--gap-4">
+                  <button
+                    type="button"
+                    className="lu-button lu-button--success"
+                    onClick={() => bulkUpdateBool("isSensitive", true)}
+                  >
+                    オン
+                  </button>
+                  <button
+                    type="button"
+                    className="lu-button lu-button--primary"
+                    onClick={() => bulkUpdateBool("isSensitive", false)}
+                  >
+                    オフ
+                  </button>
+                </div>
               </div>
             </div>
           </div>
         </details>
       </section>
 
-      <div className="table-responsive">
-        <table className="table table-striped">
+      <div className="ep-table-scroll">
+        <table className="ep-table">
           <thead>
             <tr>
               <th>絵文字</th>
@@ -218,7 +259,7 @@ export const SectionList: React.FC<SectionListProps> = ({ onZipFile }) => {
               <th />
             </tr>
           </thead>
-          <tbody>
+          <tbody onKeyDown={handleTableArrowKeys}>
             {fields.map((field, index) => (
               <Section
                 key={field.id}
@@ -230,6 +271,62 @@ export const SectionList: React.FC<SectionListProps> = ({ onZipFile }) => {
           </tbody>
         </table>
       </div>
+
+      <Dialog
+        show={pendingBulk !== null}
+        onHide={() => setPendingBulk(null)}
+        title="一括編集の確認"
+        actions={
+          pendingBulk && (
+            <>
+              <button
+                type="button"
+                className="lu-button"
+                onClick={() => setPendingBulk(null)}
+              >
+                キャンセル
+              </button>
+              {pendingBulk.type === "text" ? (
+                <>
+                  <button
+                    type="button"
+                    className="lu-button lu-button--danger"
+                    onClick={() => applyBulkText(pendingBulk, false)}
+                  >
+                    すべて置換
+                  </button>
+                  <button
+                    type="button"
+                    className="lu-button lu-button--primary"
+                    onClick={() => applyBulkText(pendingBulk, true)}
+                  >
+                    空欄のみ埋める
+                  </button>
+                </>
+              ) : (
+                <button
+                  type="button"
+                  className="lu-button lu-button--danger"
+                  onClick={() => applyBulkBool(pendingBulk)}
+                >
+                  すべて{pendingBulk.value ? "オン" : "オフ"}にする
+                </button>
+              )}
+            </>
+          )
+        }
+      >
+        {pendingBulk && (
+          <>
+            <p>
+              {pendingBulk.type === "text"
+                ? `${bulkLabels[pendingBulk.key]}を「${pendingBulk.value}」に一括で変更します。`
+                : `${bulkLabels[pendingBulk.key]}を一括で${pendingBulk.value ? "オン" : "オフ"}にします。`}
+            </p>
+            <p>この操作は取り消せません。</p>
+          </>
+        )}
+      </Dialog>
     </div>
   );
 };

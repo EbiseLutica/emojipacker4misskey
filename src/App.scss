@@ -1,14 +1,47 @@
-@import "bootstrap/scss/bootstrap";
-
-body {
-  background-color: rgb(248, 238, 237);
-  font-family: "Koruri", sans-serif;
+:root[data-theme="light"] {
+  color-scheme: light;
 }
 
-.ep-root {
-  max-width: 1400px;
-  width: 100%;
-  margin: 0 auto;
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+/* フォーカス移動で入力欄が固定 navbar の下に隠れないようにする */
+html {
+  scroll-padding-top: var(--size-navbar);
+}
+
+body {
+  margin: 0;
+  padding-top: var(--size-navbar);
+}
+
+/* 文字は小さいままで、タップできる範囲だけ周囲の余白まで広げる */
+.ep-version-link {
+  appearance: none;
+  margin: calc(-1 * var(--space-2));
+  padding: var(--space-2);
+  border: none;
+  background: none;
+  color: var(--link);
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: -2px;
+    border-radius: var(--radius-sm);
+  }
+}
+
+.ep-about-changelog {
+  scroll-margin-top: var(--space-6);
+
+  &:focus {
+    outline: none;
+  }
 }
 
 .emoji {
@@ -16,22 +49,68 @@ body {
 }
 
 .dropzone {
-  border: 2px dashed var(--bs-gray-700);
-  border-radius: 8px;
-  padding: 2rem;
+  border-radius: var(--radius-md);
+  background: var(--panel);
+  box-shadow: var(--shadow-inset);
+  padding: var(--space-8);
   text-align: center;
   cursor: pointer;
   transition:
-    border-color 0.2s,
-    background-color 0.2s;
+    border-color var(--lu-duration),
+    background-color var(--lu-duration);
 
   &:hover {
-    border-color: var(--bs-primary);
-    background-color: rgba(13, 110, 253, 0.05);
+    border-color: var(--primary);
+    background-color: color-mix(in oklab, var(--primary) 5%, transparent);
   }
 
   &.dropzone-active {
-    border-color: var(--bs-primary);
-    background-color: rgba(13, 110, 253, 0.1);
+    border-color: var(--primary);
+    background-color: color-mix(in oklab, var(--primary) 10%, transparent);
   }
+}
+
+.ep-table-scroll {
+  overflow-x: auto;
+}
+
+.ep-table {
+  width: 100%;
+
+  th {
+    white-space: nowrap;
+  }
+
+  td {
+    vertical-align: middle;
+  }
+}
+
+.ep-summary-title {
+  display: inline;
+  color: var(--dimmed);
+  font-size: var(--text-h5);
+  user-select: none;
+}
+
+.ep-bulk-fields {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+
+  @media (min-width: 701px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (min-width: 1001px) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.ep-dialog-wide {
+  width: min(800px, calc(100vw - 2 * var(--space-4)));
+}
+
+.ep-import-item {
+  border-bottom: 1px solid var(--divider);
 }
