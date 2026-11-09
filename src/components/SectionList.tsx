@@ -206,14 +206,14 @@ export const SectionList: React.FC<SectionListProps> = ({ onZipFile }) => {
                 <div className="lu-stack lu-stack--horizontal lu-stack--gap-4">
                   <button
                     type="button"
-                    className="lu-button"
+                    className="lu-button lu-button--success"
                     onClick={() => bulkUpdateBool("localOnly", true)}
                   >
                     オン
                   </button>
                   <button
                     type="button"
-                    className="lu-button"
+                    className="lu-button lu-button--primary"
                     onClick={() => bulkUpdateBool("localOnly", false)}
                   >
                     オフ
@@ -225,14 +225,14 @@ export const SectionList: React.FC<SectionListProps> = ({ onZipFile }) => {
                 <div className="lu-stack lu-stack--horizontal lu-stack--gap-4">
                   <button
                     type="button"
-                    className="lu-button"
+                    className="lu-button lu-button--success"
                     onClick={() => bulkUpdateBool("isSensitive", true)}
                   >
                     オン
                   </button>
                   <button
                     type="button"
-                    className="lu-button"
+                    className="lu-button lu-button--primary"
                     onClick={() => bulkUpdateBool("isSensitive", false)}
                   >
                     オフ
