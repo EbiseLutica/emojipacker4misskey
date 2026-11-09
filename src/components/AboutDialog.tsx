@@ -63,7 +63,7 @@ export const AboutDialog: React.FC<AboutDialogProps> = ({
         </h3>
         <Changelog />
       </div>
-
+      <hr />
       <footer className="lu-text-dimmed lu-mt-4">
         (C) 2024-2026{" "}
         <a href="https://lutic.at" target="_blank" rel="noreferrer noopener">
