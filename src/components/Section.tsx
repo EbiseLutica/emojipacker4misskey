@@ -12,6 +12,14 @@ export type SectionProps = {
   remove: UseFieldArrayRemove;
 };
 
+/** 個人情報の欄と誤認されないよう、ブラウザとパスワードマネージャーの自動入力を止める */
+const noAutofill = {
+  autoComplete: "off",
+  "data-1p-ignore": true,
+  "data-lpignore": "true",
+  "data-bwignore": true,
+};
+
 export const Section: React.FC<SectionProps> = (p) => {
   const {
     register,
@@ -37,6 +45,7 @@ export const Section: React.FC<SectionProps> = (p) => {
                 message: "名前は英数字とアンダースコアのみ使用できます",
               },
             })}
+            {...noAutofill}
             aria-invalid={!!errors.emojis?.[p.index]?.name}
             aria-label="名前"
             size={10}
@@ -54,6 +63,7 @@ export const Section: React.FC<SectionProps> = (p) => {
         <label className="lu-textfield">
           <input
             {...register(`emojis.${p.index}.category`)}
+            {...noAutofill}
             aria-label="カテゴリ"
             size={10}
             defaultValue={p.field.category}
@@ -65,6 +75,7 @@ export const Section: React.FC<SectionProps> = (p) => {
         <label className="lu-textfield">
           <input
             {...register(`emojis.${p.index}.tags`)}
+            {...noAutofill}
             aria-label="タグ"
             size={10}
             defaultValue={p.field.tags}
@@ -76,6 +87,7 @@ export const Section: React.FC<SectionProps> = (p) => {
         <label className="lu-textfield">
           <input
             {...register(`emojis.${p.index}.license`)}
+            {...noAutofill}
             aria-label="ライセンス"
             size={10}
             defaultValue={p.field.license}
