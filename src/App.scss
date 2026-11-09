@@ -6,6 +6,11 @@
   color-scheme: dark;
 }
 
+/* フォーカス移動で入力欄が固定 navbar の下に隠れないようにする */
+html {
+  scroll-padding-top: var(--size-navbar);
+}
+
 body {
   margin: 0;
   padding-top: var(--size-navbar);

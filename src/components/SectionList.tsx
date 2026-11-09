@@ -4,6 +4,7 @@ import { useDropzone } from "react-dropzone";
 import type { FormValues } from "../models/form-values";
 import { Dialog } from "./Dialog";
 import { Section } from "./Section";
+import { handleTableArrowKeys } from "./table-arrow-keys";
 
 type BulkTextKey = "category" | "tags" | "license";
 type BulkBoolKey = "localOnly" | "isSensitive";
@@ -258,7 +259,7 @@ export const SectionList: React.FC<SectionListProps> = ({ onZipFile }) => {
               <th />
             </tr>
           </thead>
-          <tbody>
+          <tbody onKeyDown={handleTableArrowKeys}>
             {fields.map((field, index) => (
               <Section
                 key={field.id}
