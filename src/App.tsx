@@ -9,14 +9,15 @@ import type { Emoji } from "./models/emoji";
 import "./styles/lutica/tokens.css";
 import "./styles/lutica/bundle.css";
 import "./App.scss";
+import { AboutDialog } from "./components/AboutDialog";
 import { Dialog } from "./components/Dialog";
 import { Help } from "./components/Help";
 import { ImportModal } from "./components/ImportModal";
-import { Changelog } from "./components/Changelog";
 import { changeLog } from "./changelog";
 
 function App() {
   const methods = useForm<FormValues>();
+  const [isAboutModalShown, setAboutModalShown] = useState(false);
   const [isDownloadedModalShown, setDownloadedModalShown] = useState(false);
   const [isImportErrorModalShown, setImportErrorModalShown] = useState(false);
   const [importErrorMessage, setImportErrorMessage] = useState("");
@@ -93,26 +94,25 @@ function App() {
 
   return (
     <div>
-      <main className="lu-container lu-container--wide lu-my-12">
-        <header>
-          <h1>
-            Emoji Packer for Misskey <small>{changeLog[0].version}</small>
+      <header className="lu-navbar lu-navbar--fixed">
+        <div className="lu-navbar__inner">
+          <h1 className="lu-navbar__brand">
+            Emoji Packer<small>{changeLog[0].version}</small>
           </h1>
-          <ul>
-            <li>
-              複数の絵文字画像を、Misskeyで使える絵文字インポート用のzipファイルに変換するサービスです。
-            </li>
-            <li>Misskey 2024.8.0-2025.12.0 で動作確認しています。</li>
-            <li>
-              お使いの端末で完結しており、アップロードした画像や入力値は外部サーバー等に一切送信されません。
-            </li>
-            <li>
-              なにか不具合がありましたら、お手数ですが
-              <a href="https://mk.lutic.at/@Lutica">@Lutica@mk.lutic.at</a>
-              までご連絡ください。
-            </li>
-          </ul>
-        </header>
+          <nav className="lu-navbar__items">
+            <button
+              className="lu-button lu-button--sm"
+              type="button"
+              aria-haspopup="dialog"
+              onClick={() => setAboutModalShown(true)}
+            >
+              About
+            </button>
+            <button className="lu-button lu-button--sm" type="button" aria-haspopup="menu" aria-expanded="true">dark/light/system</button>
+          </nav>
+        </div>
+      </header>
+      <main className="lu-container lu-container--wide lu-my-12">
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onValid)}>
             <SectionList onZipFile={handleZipFile} />
@@ -128,20 +128,10 @@ function App() {
           </form>
         </FormProvider>
       </main>
-      <div className="lu-container lu-container--wide lu-my-12">
-        <Help />
-        <Changelog />
-      </div>
-      <footer className="lu-text-center lu-my-12 lu-text-dimmed">
-        (C) 2024-2026 Ebise Lutica |{" "}
-        <a
-          href="https://github.com/EbiseLutica/emojipacker4misskey.git"
-          target="_blank"
-          rel="noreferrer noopener"
-        >
-          GitHub
-        </a>
-      </footer>
+      <AboutDialog
+        show={isAboutModalShown}
+        onHide={() => setAboutModalShown(false)}
+      />
       <Dialog
         show={isDownloadedModalShown}
         onHide={() => setDownloadedModalShown(false)}
@@ -178,7 +168,11 @@ function App() {
             Misskeyでシェア
           </a>
         </div>
-        <Help />
+        
+        <details>
+          <summary>Misskeyへの絵文字パックのインポート方法</summary>
+          <Help />
+        </details>
       </Dialog>
       <Dialog
         show={isImportErrorModalShown}
