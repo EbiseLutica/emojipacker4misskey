@@ -1,0 +1,1737 @@
+/* Lutica Design System — base elements, prose and form controls. Plain CSS on top of tokens.css; no framework. */
+
+/* ---------- Motion ----------
+   tokens.json has no motion family, so the three durations live here. */
+
+:where(:root) {
+  --lu-duration-fast: 0.1s;  /* press feedback */
+  --lu-duration: 0.15s;      /* hover, colour changes */
+  --lu-duration-slow: 0.25s; /* glows, the checkbox stroke, progress */
+}
+
+/* ---------- Surface ----------
+   Every surface hands its own colour down as --surface, so what sits on it
+   (an Alert's tint) is built from the surface it really stands on.
+   --lu-tint-l is the lightness of that tint. It is declared on the same
+   selectors as the theme tokens, so a themed subtree gets its own. */
+
+:where(:root, [data-theme]) {
+  --surface: var(--background);
+}
+:root, [data-theme="light"] {
+  --lu-tint-l: 0.93;
+}
+[data-theme="dark"] {
+  --lu-tint-l: 0.28;
+}
+.lu-card {
+  --surface: var(--panel);
+}
+.lu-dialog,
+.lu-drawer,
+.lu-menu__panel {
+  --surface: var(--panel-raised);
+}
+
+/* ---------- Theme: follow the OS when none is chosen ----------
+   tokens.css can only switch on data-theme, so without the attribute (no script
+   ran, or none was ever set) it falls back to light. This block gives such a
+   page the dark values when the OS prefers dark. The values mirror tokens.json's
+   dark theme: change both together. A data-theme on html or body always wins. */
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]):not(:has(> body[data-theme])) {
+    color-scheme: dark;
+    --background: #0f0f1a;
+    --panel: #161625;
+    --panel-raised: #1b1b2c;
+    --panel-button: #2e2e45;
+    --border: #6b6580;
+    --foreground: #c9baba;
+    --foreground-strong: #e1e1e1;
+    --divider: #303046;
+    --dimmed: #a59ea3;
+    --brand: #f24149;
+    --primary: var(--brand);
+    --on-primary: #000000;
+    --link: var(--primary);
+    --success: #6f8e4d;
+    --warning: #ecbd15;
+    --danger: #f44336;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-control: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 1px 3px rgba(0, 0, 0, 0.3);
+    --shadow-inset: inset 0 1px 3px rgba(0, 0, 0, 0.45);
+    --shadow-md: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 4px 12px rgba(0, 0, 0, 0.35);
+    --shadow-lg: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 12px 32px rgba(0, 0, 0, 0.45);
+    --lu-tint-l: 0.28;
+  }
+}
+
+/* ---------- Base elements (whole page, zero specificity) ----------
+   Only size, colour, weight and lines: no article-style decoration.
+   Any class (a component, an app's own styles) overrides these. */
+
+:where(html) {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  line-height: 1.5;
+}
+::selection {
+  background: var(--primary);
+  color: var(--on-primary);
+}
+
+:where(h1, h2, h3, h4, h5, h6) {
+  color: var(--foreground-strong);
+  font-weight: 700;
+  line-height: 1.5;
+}
+:where(h1) { font-size: var(--text-h1); }
+:where(h2) { font-size: var(--text-h2); }
+:where(h3) { font-size: var(--text-h3); }
+:where(h4) { font-size: var(--text-h4); }
+:where(h5) { font-size: var(--text-h5); }
+:where(h6) { font-size: var(--text-h6); color: var(--dimmed); }
+
+:where(a) {
+  color: var(--link);
+  text-underline-offset: 0.2em;
+}
+:where(b, strong) {
+  color: var(--foreground-strong);
+  font-weight: 700;
+}
+:where(small) {
+  font-size: var(--text-small);
+}
+
+:where(ul, ol) {
+  padding-inline-start: 1.5em;
+}
+:where(li)::marker {
+  color: var(--primary);
+}
+:where(ol > li)::marker {
+  font-weight: 600;
+}
+
+:where(code, kbd, samp, pre) {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+}
+:where(code, kbd, samp) {
+  padding: 0.1em 0.35em;
+  border-radius: var(--radius-sm);
+  background: color-mix(in oklab, var(--foreground) 8%, transparent);
+}
+:where(pre) {
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  background: color-mix(in oklab, var(--foreground) 6%, transparent);
+  line-height: 1.6;
+  overflow-x: auto;
+}
+:where(pre code) {
+  padding: 0;
+  background: none;
+  font-size: inherit;
+}
+
+:where(hr) {
+  border: none;
+  border-top: 1px solid var(--divider);
+}
+
+:where(blockquote) {
+  margin-inline: 0;
+  padding: 0 var(--space-4);
+  border-inline-start: 2px solid var(--dimmed);
+  color: var(--dimmed);
+}
+
+:where(table) {
+  border-collapse: collapse;
+}
+:where(th, td) {
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--divider);
+  text-align: start;
+  vertical-align: top;
+}
+:where(th) {
+  color: var(--foreground-strong);
+  font-weight: 600;
+}
+:where(thead th) {
+  border-bottom: 2px solid var(--border);
+}
+
+/* ---------- Prose (.lu-prose): article decoration, after lutica.net ----------
+   Put .lu-prose on an article, a notice or a terms page (or on body for a
+   whole blog). Everything stays at zero class specificity. */
+
+:where(.lu-prose) {
+  line-height: 2;
+}
+:where(.lu-prose) p {
+  margin: 1em 0 10px;
+}
+:where(.lu-prose) p + p {
+  margin-top: 0;
+}
+:where(.lu-prose) h1 {
+  margin: 0;
+}
+:where(.lu-prose) h2 {
+  margin: var(--space-16) 0 0;
+  border-bottom: 2px solid var(--brand);
+}
+:where(.lu-prose) h2::before {
+  content: "";
+  display: inline-block;
+  width: 4px;
+  height: 1.25em;
+  margin-right: var(--space-3);
+  background: var(--brand);
+  vertical-align: -0.27em;
+}
+:where(.lu-prose) h3 {
+  margin: var(--space-12) 0 0;
+  padding-left: var(--space-2);
+  border-left: 2px solid var(--brand);
+}
+:where(.lu-prose) :is(h4, h5, h6) {
+  margin: var(--space-8) 0 0;
+}
+:where(.lu-prose) > :first-child {
+  margin-top: 0;
+}
+:where(.lu-prose) :is(ul, ol) {
+  margin: 1em 0;
+}
+:where(.lu-prose) li + li {
+  margin-top: var(--space-1);
+}
+:where(.lu-prose) :is(li > ul, li > ol) {
+  margin: var(--space-1) 0 0;
+}
+:where(.lu-prose) blockquote {
+  margin: 1.5em 0;
+}
+:where(.lu-prose) pre {
+  margin: 1.5em 0;
+}
+:where(.lu-prose) hr {
+  margin: var(--space-12) 0;
+}
+:where(.lu-prose) table {
+  width: 100%;
+  margin: 1.5em 0;
+  line-height: 1.5;
+}
+:where(.lu-prose) thead th {
+  border-bottom-color: var(--brand);
+}
+:where(.lu-prose) img {
+  max-width: 100%;
+}
+
+/* ---------- Shared ---------- */
+
+.lu-button,
+.lu-checkbox,
+.lu-radio,
+.lu-switch {
+  font-family: var(--font-sans);
+  box-sizing: border-box;
+  margin: 0;
+}
+
+.lu-button:focus-visible,
+.lu-checkbox:focus-visible,
+.lu-radio:focus-visible,
+.lu-switch:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.lu-button:disabled,
+.lu-checkbox:disabled,
+.lu-radio:disabled,
+.lu-switch:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ---------- Button ---------- */
+
+.lu-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  height: var(--size-control);
+  padding: 0 var(--space-4);
+  border: none;
+  border-radius: var(--radius-md);
+  background: var(--panel-button);
+  box-shadow: var(--shadow-control);
+  color: var(--foreground);
+  font-size: var(--text-ui);
+  font-weight: 600;
+  line-height: 1;
+  text-box: trim-both cap alphabetic;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color var(--lu-duration) ease-out, box-shadow var(--lu-duration-fast) ease-out, translate var(--lu-duration-fast) ease-out;
+}
+.lu-button:hover:not(:disabled) {
+  background: color-mix(in oklab, var(--panel-button) 94%, var(--foreground));
+}
+/* Pressed: the object sinks into the surface. */
+.lu-button:active:not(:disabled) {
+  background: color-mix(in oklab, var(--panel-button) 88%, var(--foreground));
+  box-shadow: none;
+  translate: 0 1px;
+}
+
+.lu-button--primary {
+  background: var(--primary);
+  color: var(--on-primary);
+}
+.lu-button--primary:hover:not(:disabled) {
+  background: color-mix(in oklab, var(--primary) 88%, var(--foreground));
+}
+.lu-button--primary:active:not(:disabled) {
+  background: color-mix(in oklab, var(--primary) 80%, var(--foreground));
+}
+
+.lu-button--danger {
+  background: var(--danger);
+  color: var(--on-primary);
+}
+.lu-button--danger:hover:not(:disabled) {
+  background: color-mix(in oklab, var(--danger) 88%, var(--foreground));
+}
+
+.lu-button--ghost {
+  background: transparent;
+  box-shadow: none;
+  color: var(--link);
+}
+.lu-button--ghost:hover:not(:disabled) {
+  background: color-mix(in oklab, var(--primary) 10%, transparent);
+}
+
+.lu-button--sm {
+  height: var(--size-control-sm);
+  padding: 0 var(--space-3);
+  font-size: var(--text-small);
+}
+
+.lu-button--block {
+  display: flex;
+  width: 100%;
+}
+
+/* ---------- Textfield / Textarea (framed inputs) ----------
+   A raised frame (the control level: panel-button + shadow-control) with a
+   3px rim around a recessed well where the text goes. The frame can carry a
+   small title above the well; a caption sits just outside, under the frame.
+   Focus makes the well glow in primary; an error turns the title, the
+   caption and the typed text danger.
+   The frame is drawn by ::before over the title and well rows only, so the
+   caption can stay inside the same <label> yet fall outside the frame. */
+
+.lu-textfield,
+.lu-textarea {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: 100%;
+  box-sizing: border-box;
+  width: 100%;
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+.lu-textfield::before,
+.lu-textarea::before {
+  content: "";
+  grid-row: 1 / 3;
+  grid-column: 1;
+  z-index: -1;
+  border-radius: var(--radius-md);
+  background: var(--panel-button);
+  box-shadow: var(--shadow-control);
+  transition: background-color var(--lu-duration) ease-out;
+}
+.lu-textfield:hover:not(:has(:disabled))::before,
+.lu-textarea:hover:not(:has(:disabled))::before {
+  background: color-mix(in oklab, var(--panel-button) 94%, var(--foreground));
+}
+
+/* the recessed well */
+.lu-textfield > input,
+.lu-textarea > textarea {
+  grid-row: 2;
+  grid-column: 1;
+  box-sizing: border-box;
+  width: auto;
+  margin: var(--size-rim);
+  border: none;
+  border-radius: calc(var(--radius-md) - var(--size-rim));
+  background: var(--panel);
+  box-shadow: var(--shadow-inset);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  outline: none; /* the glow shows focus */
+  transition: box-shadow var(--lu-duration-slow) ease-out, color var(--lu-duration) ease-out;
+}
+.lu-textfield > input {
+  height: calc(var(--size-control) - 2 * var(--size-rim));
+  padding: 0 calc(var(--space-3) - var(--size-rim));
+  line-height: 1.5;
+}
+.lu-textarea > textarea {
+  display: block;
+  min-height: 114px;
+  padding: calc(var(--space-2) - var(--size-rim)) calc(var(--space-3) - var(--size-rim));
+  line-height: 2;
+  resize: vertical;
+}
+.lu-textfield > input::placeholder,
+.lu-textarea > textarea::placeholder {
+  color: var(--dimmed);
+  opacity: 1;
+}
+
+/* title, on the frame */
+.lu-textfield__title,
+.lu-textarea__title {
+  transition: color var(--lu-duration) ease-out;
+  grid-row: 1;
+  grid-column: 1;
+  padding: var(--space-3) var(--space-3) var(--space-1);
+  font-size: var(--text-small);
+  font-weight: 600;
+  line-height: 1;
+  text-box: trim-both cap alphabetic;
+}
+
+/* caption, just below the frame */
+.lu-textfield__caption,
+.lu-textarea__caption {
+  transition: color var(--lu-duration) ease-out;
+  grid-row: 3;
+  grid-column: 1;
+  padding: var(--space-1) var(--space-3) 0;
+  color: var(--dimmed);
+  font-size: var(--text-small);
+  line-height: 1.5;
+}
+
+/* focus: the well glows in primary, fading in */
+.lu-textfield > input:focus,
+.lu-textarea > textarea:focus {
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--primary) 70%, transparent),
+    0 0 10px 2px color-mix(in oklab, var(--primary) 45%, transparent),
+    var(--shadow-inset);
+}
+
+/* error: title, caption and typed text turn danger; no ring */
+.lu-textfield > [aria-invalid="true"],
+.lu-textarea > [aria-invalid="true"],
+.lu-textfield:has(> [aria-invalid="true"]) > .lu-textfield__caption,
+.lu-textarea:has(> [aria-invalid="true"]) > .lu-textarea__caption {
+  color: var(--danger);
+}
+/* on the lighter frame, danger is mixed toward foreground-strong so the
+   small title keeps 4.5:1 in both themes (dark: 4.8:1 on panel-button) */
+.lu-textfield:has(> [aria-invalid="true"]) > .lu-textfield__title,
+.lu-textarea:has(> [aria-invalid="true"]) > .lu-textarea__title {
+  color: color-mix(in oklab, var(--danger) 75%, var(--foreground-strong));
+}
+
+.lu-textfield:has(> :disabled),
+.lu-textarea:has(> :disabled) {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.lu-textfield > :disabled,
+.lu-textarea > :disabled {
+  cursor: not-allowed;
+}
+
+/* ---------- Select ----------
+   The same frame as the text fields (panel-button + shadow-control, drawn by
+   ::before over the title and control rows), with a small title on the frame
+   and a caption just below it. The native <select> sits in the frame without
+   a well: it is pressed, not typed into. */
+
+.lu-select {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: 100%;
+  box-sizing: border-box;
+  width: 100%;
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+.lu-select::before {
+  content: "";
+  grid-row: 1 / 3;
+  grid-column: 1;
+  z-index: -1;
+  border-radius: var(--radius-md);
+  background: var(--panel-button);
+  box-shadow: var(--shadow-control);
+  transition: background-color var(--lu-duration) ease-out, box-shadow var(--lu-duration-slow) ease-out;
+}
+.lu-select:hover:not(:has(:disabled))::before {
+  background: color-mix(in oklab, var(--panel-button) 94%, var(--foreground));
+}
+
+.lu-select > select {
+  appearance: none;
+  grid-row: 2;
+  grid-column: 1;
+  box-sizing: border-box;
+  width: 100%;
+  height: var(--size-control);
+  margin: 0;
+  padding: 0 calc(var(--space-3) + 24px) 0 var(--space-3);
+  border: none;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  line-height: 1.5;
+  outline: none; /* the frame glows instead */
+  cursor: pointer;
+  transition: color var(--lu-duration) ease-out;
+}
+
+/* chevron, in the control row */
+.lu-select::after {
+  content: "";
+  grid-row: 2;
+  grid-column: 1;
+  justify-self: end;
+  align-self: center;
+  width: 16px;
+  height: 16px;
+  margin-right: var(--space-3);
+  background: var(--dimmed);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 6l4.5 4.5L12.5 6' fill='none' stroke='black' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+          mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 6l4.5 4.5L12.5 6' fill='none' stroke='black' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  pointer-events: none;
+}
+
+.lu-select__title {
+  grid-row: 1;
+  grid-column: 1;
+  padding: var(--space-3) var(--space-3) 0;
+  font-size: var(--text-small);
+  font-weight: 600;
+  line-height: 1;
+  text-box: trim-both cap alphabetic;
+  transition: color var(--lu-duration) ease-out;
+}
+.lu-select__caption {
+  grid-row: 3;
+  grid-column: 1;
+  padding: var(--space-1) var(--space-3) 0;
+  color: var(--dimmed);
+  font-size: var(--text-small);
+  line-height: 1.5;
+  transition: color var(--lu-duration) ease-out;
+}
+
+/* focus: the frame glows in primary */
+.lu-select:has(> select:focus-visible)::before {
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--primary) 70%, transparent),
+    0 0 10px 2px color-mix(in oklab, var(--primary) 45%, transparent),
+    var(--shadow-control);
+}
+
+/* error: title, caption and the chosen value turn danger */
+.lu-select > select[aria-invalid="true"],
+.lu-select:has(> [aria-invalid="true"]) > .lu-select__caption {
+  color: var(--danger);
+}
+.lu-select:has(> [aria-invalid="true"]) > .lu-select__title {
+  color: color-mix(in oklab, var(--danger) 75%, var(--foreground-strong));
+}
+
+.lu-select:has(> :disabled) {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.lu-select > select:disabled {
+  cursor: not-allowed;
+}
+
+/* Customizable select: the open list follows the system where the browser
+   supports appearance: base-select; elsewhere the OS list shows unchanged. */
+@supports (appearance: base-select) {
+  .lu-select > select,
+  .lu-select > select::picker(select) {
+    appearance: base-select;
+  }
+  .lu-select > select {
+    display: flex;
+    align-items: center;
+  }
+  .lu-select > select::picker-icon {
+    display: none; /* the wrapper draws the chevron */
+  }
+  .lu-select::after {
+    transition: transform var(--lu-duration) ease-out;
+  }
+  .lu-select:has(> select:open)::after {
+    transform: rotate(180deg);
+  }
+
+  .lu-select > select::picker(select) {
+    box-sizing: border-box;
+    margin: var(--space-1) 0;
+    padding: var(--space-1);
+    border: none;
+    border-radius: var(--radius-md);
+    background: var(--panel-raised);
+    color: var(--foreground);
+    box-shadow: var(--shadow-md);
+    max-block-size: 320px;
+    overflow-y: auto;
+    opacity: 0;
+    translate: 0 -12px;
+    transition:
+      opacity var(--lu-duration-fast) ease-out,
+      translate var(--lu-duration-fast) ease-out,
+      overlay var(--lu-duration-fast) allow-discrete,
+      display var(--lu-duration-fast) allow-discrete;
+  }
+  .lu-select > select:open::picker(select) {
+    opacity: 1;
+    translate: 0 0;
+  }
+  @starting-style {
+    .lu-select > select:open::picker(select) {
+      opacity: 0;
+      translate: 0 -12px;
+    }
+  }
+
+  .lu-select option {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-block-size: 36px;
+    padding: var(--space-1) var(--space-3) var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: 1.5;
+    cursor: pointer;
+  }
+  .lu-select option:hover,
+  .lu-select option:focus-visible {
+    background: color-mix(in oklab, var(--primary) 12%, transparent);
+    outline: none;
+  }
+  .lu-select option:checked {
+    font-weight: 600;
+  }
+  .lu-select option::checkmark {
+    order: 0;
+    width: 16px;
+    color: var(--primary);
+    content: "✓";
+    font-weight: 700;
+  }
+  .lu-select option:not(:checked)::checkmark {
+    visibility: hidden;
+  }
+  .lu-select option:disabled {
+    color: var(--dimmed);
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  .lu-select optgroup {
+    padding-block-start: var(--space-1);
+  }
+  .lu-select optgroup legend {
+    padding: var(--space-1) var(--space-2);
+    color: var(--dimmed);
+    font-size: var(--text-small);
+    font-weight: 600;
+  }
+}
+
+/* ---------- Choice label (checkbox / radio / switch + text) ---------- */
+
+.lu-choice {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  font-size: var(--text-ui);
+  line-height: 1.5;
+  cursor: pointer;
+}
+.lu-choice > input {
+  flex: none;
+  margin-top: 0.5px; /* centre a 20px box on the first 21px line */
+}
+.lu-choice > .lu-switch {
+  margin-top: -1.5px; /* 24px track on a 21px line */
+}
+.lu-choice:has(> input:disabled) {
+  cursor: not-allowed;
+  color: var(--dimmed);
+}
+
+/* ---------- Checkbox ---------- */
+
+.lu-checkbox,
+.lu-radio {
+  appearance: none;
+  display: inline-grid;
+  place-content: center;
+  width: var(--size-indicator);
+  height: var(--size-indicator);
+  border: none;
+  background: var(--panel-button);
+  box-shadow: var(--shadow-control);
+  cursor: pointer;
+  transition: background-color var(--lu-duration) ease-out;
+}
+.lu-checkbox {
+  border-radius: var(--radius-sm);
+}
+.lu-checkbox::before {
+  content: "";
+  width: 14px;
+  height: 14px;
+  background: var(--on-primary);
+  --lu-check-glyph: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M2.5 7.5l3 3 6-7' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  /* Two mask layers: the glyph, intersected with a soft left-to-right wipe.
+     The wipe sits off to the right when unchecked and slides in on check,
+     so the mark appears like a pen stroke. */
+  -webkit-mask-image: var(--lu-check-glyph), linear-gradient(to right, #000 40%, transparent 60%);
+          mask-image: var(--lu-check-glyph), linear-gradient(to right, #000 40%, transparent 60%);
+  -webkit-mask-size: contain, 250% 100%;
+          mask-size: contain, 250% 100%;
+  -webkit-mask-repeat: no-repeat;
+          mask-repeat: no-repeat;
+  -webkit-mask-position: center, 100% 0;
+          mask-position: center, 100% 0;
+  -webkit-mask-composite: source-in;
+          mask-composite: intersect;
+}
+.lu-checkbox:indeterminate::before {
+  --lu-check-glyph: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M3 7h8' fill='none' stroke='black' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+.lu-checkbox:checked,
+.lu-checkbox:indeterminate {
+  background: var(--primary);
+}
+.lu-checkbox:checked::before,
+.lu-checkbox:indeterminate::before {
+  -webkit-mask-position: center, 0 0;
+          mask-position: center, 0 0;
+  transition: -webkit-mask-position var(--lu-duration-slow) cubic-bezier(0.4, 0, 0.2, 1), mask-position var(--lu-duration-slow) cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ---------- Radio ---------- */
+
+.lu-radio {
+  border-radius: var(--radius-full);
+}
+.lu-radio::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  background: var(--on-primary);
+  transform: scale(0);
+  transition: transform var(--lu-duration-fast) ease-out;
+}
+.lu-radio:checked {
+  background: var(--primary);
+}
+.lu-radio:checked::before {
+  transform: scale(1);
+}
+
+.lu-checkbox:hover:not(:disabled):not(:checked):not(:indeterminate),
+.lu-radio:hover:not(:disabled):not(:checked) {
+  background: color-mix(in oklab, var(--panel-button) 94%, var(--foreground));
+}
+
+/* ---------- Switch (input type="checkbox" role="switch") ---------- */
+
+.lu-switch {
+  appearance: none;
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 24px;
+  border: none;
+  border-radius: var(--radius-full);
+  background: var(--border);
+  cursor: pointer;
+  transition: background-color var(--lu-duration) ease-out;
+}
+.lu-switch::before {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: var(--radius-full);
+  background: var(--panel-button);
+  box-shadow: var(--shadow-control);
+  transition: transform var(--lu-duration) ease-out, background-color var(--lu-duration) ease-out;
+}
+.lu-switch:checked {
+  background: var(--primary);
+}
+.lu-switch:checked::before {
+  transform: translateX(16px);
+  background: var(--on-primary);
+}
+
+/* ---------- Navbar ----------
+   A translucent panel with a backdrop blur and shadow-lg. Static by default;
+   add .lu-navbar--fixed to pin it to the top of the viewport, and offset the
+   page with padding-top: var(--size-navbar). */
+
+.lu-navbar {
+  position: relative;
+  z-index: 100;
+  box-sizing: border-box;
+  height: var(--size-navbar);
+  padding: 0 var(--space-4);
+  background: color-mix(in oklab, var(--panel) 72%, transparent);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+          backdrop-filter: blur(16px) saturate(1.4);
+  box-shadow: var(--shadow-lg);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+/* no blur available, or the viewer asks for less transparency: go solid */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .lu-navbar { background: var(--panel); }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .lu-navbar { background: var(--panel); }
+}
+
+.lu-navbar--fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+.lu-navbar__inner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  max-width: 1280px;
+  height: 100%;
+  margin: 0 auto;
+}
+
+.lu-navbar__brand {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--foreground-strong);
+  font-size: var(--text-body);
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.lu-navbar__brand img,
+.lu-navbar__brand svg {
+  height: 32px;
+  width: auto;
+}
+
+/* items are ordinary buttons: .lu-button (usually --sm) */
+.lu-navbar__items {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-left: auto;
+  min-width: 0;
+  /* scrolls sideways when crowded; the padding keeps button shadows unclipped */
+  padding: 6px 4px;
+  margin-block: -6px;
+  margin-right: -4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.lu-navbar__items > * {
+  flex: none;
+}
+
+/* ---------- Progress (<progress class="lu-progress">) ---------- */
+
+.lu-progress {
+  appearance: none;
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  height: var(--size-progress);
+  margin: 0;
+  overflow: hidden;
+  border: none;
+  border-radius: var(--radius-full);
+  background: var(--panel-button);
+  box-shadow: var(--shadow-control);
+  color: var(--primary);
+}
+.lu-progress::-webkit-progress-bar {
+  border-radius: var(--radius-full);
+  background: var(--panel-button);
+}
+.lu-progress::-webkit-progress-value {
+  border-radius: var(--radius-full);
+  background: var(--primary);
+  transition: inline-size var(--lu-duration-slow) ease-out;
+}
+.lu-progress::-moz-progress-bar {
+  border-radius: var(--radius-full);
+  background: var(--primary);
+}
+
+/* no value: a short primary segment sweeps across */
+.lu-progress:indeterminate {
+  background:
+    linear-gradient(var(--primary), var(--primary)) no-repeat 0 0 / 30% 100%,
+    var(--panel-button);
+  animation: lu-progress-sweep 1.2s ease-in-out infinite;
+}
+.lu-progress:indeterminate::-webkit-progress-bar {
+  background: transparent;
+}
+.lu-progress:indeterminate::-moz-progress-bar {
+  background: transparent;
+}
+@keyframes lu-progress-sweep {
+  from { background-position: -50% 0, 0 0; }
+  to   { background-position: 150% 0, 0 0; }
+}
+
+/* ---------- Chip ---------- */
+
+.lu-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  box-sizing: border-box;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-full);
+  background: var(--primary);
+  color: var(--on-primary);
+  font-family: var(--font-sans);
+  font-size: var(--text-tiny);
+  font-weight: 600;
+  line-height: 1;
+  text-box: trim-both cap alphabetic;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+.lu-chip--primary { background: var(--primary); }
+.lu-chip--success { background: var(--success); }
+.lu-chip--warning { background: var(--warning); }
+.lu-chip--danger  { background: var(--danger); }
+.lu-chip--dimmed  { background: var(--dimmed); }
+
+/* ---------- Card ----------
+   The card level of Elevation: panel + shadow-sm + radius-lg. */
+
+.lu-card {
+  box-sizing: border-box;
+  padding: var(--space-6);
+  border-radius: var(--radius-lg);
+  background: var(--panel);
+  box-shadow: var(--shadow-sm);
+  color: var(--foreground);
+}
+.lu-card > :first-child { margin-top: 0; }
+.lu-card > :last-child { margin-bottom: 0; }
+
+/* a whole card that is a link or a button: lifts on hover (portal's card hover) */
+.lu-card--link {
+  position: relative;
+  display: block;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform var(--lu-duration-slow) ease-out;
+}
+/* shadow-sm and shadow-lg have different layer counts in dark, so the
+   shadow cannot interpolate: fade a shadow-lg layer in on top instead */
+.lu-card--link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--lu-duration-slow) ease-out;
+}
+.lu-card--link:hover {
+  transform: scale(1.01);
+}
+.lu-card--link:hover::after {
+  opacity: 1;
+}
+.lu-card--link:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* long-form article body (lutica.net's article card) */
+.lu-card--article {
+  padding: var(--space-12) var(--space-8);
+}
+@media (max-width: 600px) {
+  .lu-card--article {
+    padding: var(--space-8) var(--space-4);
+  }
+}
+
+/* ---------- Dialog (<dialog class="lu-dialog">, opened with showModal()) ----------
+   The modal level of Elevation: panel-raised + shadow-lg + radius-lg, over a
+   blurred backdrop. */
+
+.lu-dialog {
+  box-sizing: border-box;
+  width: min(560px, calc(100vw - 2 * var(--space-4)));
+  max-height: calc(100dvh - 2 * var(--space-8));
+  margin: auto;
+  padding: var(--space-6);
+  border: none;
+  border-radius: var(--radius-lg);
+  background: var(--panel-raised);
+  box-shadow: var(--shadow-lg);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  overflow: auto;
+  /* 閉じるフェード中も向きと間隔を保つため、[open] ではなくここに置く */
+  flex-direction: column;
+  gap: var(--space-4);
+  opacity: 0;
+  translate: 0 var(--space-2);
+  transition:
+    opacity var(--lu-duration-slow) ease-out,
+    translate var(--lu-duration-slow) ease-out,
+    overlay var(--lu-duration-slow) allow-discrete,
+    display var(--lu-duration-slow) allow-discrete;
+}
+.lu-dialog[open] {
+  display: flex;
+  opacity: 1;
+  translate: 0 0;
+}
+@starting-style {
+  .lu-dialog[open] {
+    opacity: 0;
+    translate: 0 var(--space-2);
+  }
+}
+.lu-dialog::backdrop {
+  background: color-mix(in oklab, var(--background) 60%, transparent);
+  -webkit-backdrop-filter: blur(4px);
+          backdrop-filter: blur(4px);
+  opacity: 0;
+  transition:
+    opacity var(--lu-duration-slow) ease-out,
+    overlay var(--lu-duration-slow) allow-discrete,
+    display var(--lu-duration-slow) allow-discrete;
+}
+.lu-dialog[open]::backdrop {
+  opacity: 1;
+}
+@starting-style {
+  .lu-dialog[open]::backdrop {
+    opacity: 0;
+  }
+}
+
+.lu-dialog__title {
+  margin: 0;
+  color: var(--foreground-strong);
+  font-size: var(--text-h4);
+  font-weight: 700;
+  line-height: 1.5;
+}
+.lu-dialog__body {
+  line-height: 2;
+}
+.lu-dialog__body > :first-child { margin-top: 0; }
+.lu-dialog__body > :last-child { margin-bottom: 0; }
+.lu-dialog__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  margin: 0;
+  padding-top: var(--space-2);
+}
+
+/* ---------- Alert ----------
+   A message block tinted 24% with its status colour. An optional icon slot
+   (.lu-alert__icon, fixed width) takes the full status colour; the text
+   stays foreground so it reads on every tint. */
+
+.lu-alert {
+  --lu-alert-color: var(--primary);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  column-gap: var(--space-3);
+  box-sizing: border-box;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  /* the status colour's hue at a fixed lightness and 30% of its chroma, 70% over the surface it stands on */
+  background: color-mix(in oklab, oklch(from var(--lu-alert-color) var(--lu-tint-l) calc(c * 0.3) h) 70%, var(--surface, var(--panel)));
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  font-size: var(--text-ui);
+  line-height: 1.5;
+}
+.lu-alert--success { --lu-alert-color: var(--success); }
+.lu-alert--warning { --lu-alert-color: var(--warning); }
+.lu-alert--danger  { --lu-alert-color: var(--danger); }
+.lu-alert--info    { --lu-alert-color: var(--dimmed); }
+
+/* icon slot: a fixed 20px column, everything else in the second column */
+.lu-alert:has(> .lu-alert__icon) {
+  grid-template-columns: var(--size-indicator) minmax(0, 1fr);
+}
+.lu-alert > :not(.lu-alert__icon) {
+  grid-column: -2;
+}
+.lu-alert__icon {
+  grid-column: 1;
+  grid-row: 1 / span 9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--size-indicator);
+  height: 1.5em; /* one text line, so the icon centres on the first line */
+  color: var(--lu-alert-color);
+  font-size: var(--text-ui);
+}
+.lu-alert__icon > :is(svg, img, i) {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.lu-alert__title {
+  display: block;
+  color: var(--foreground-strong);
+  font-weight: 700;
+}
+.lu-alert > p,
+.lu-alert__body {
+  margin: 0;
+}
+.lu-alert__title + * {
+  margin-top: var(--space-1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lu-button, .lu-textfield > input, .lu-textarea > textarea, .lu-select > select, .lu-select::before, .lu-select::after,
+  .lu-checkbox, .lu-checkbox::before, .lu-checkbox:checked::before, .lu-checkbox:indeterminate::before,
+  .lu-radio, .lu-radio::before,
+  .lu-switch, .lu-switch::before {
+    transition: none;
+  }
+  .lu-progress::-webkit-progress-value,
+  .lu-card--link, .lu-card--link::after, .lu-dialog, .lu-dialog::backdrop,
+  .lu-select > select::picker(select) {
+    transition: none;
+  }
+  .lu-progress:indeterminate {
+    animation: none;
+    /* a still segment would read as 30% done: tint the whole track instead */
+    background: color-mix(in oklab, var(--primary) 35%, var(--panel-button));
+  }
+}
+
+/* ---------- TabBar ----------
+   A row of tabs for switching a view in place; the selected tab is underlined
+   in primary. Tabs are buttons (or links) inside a role="tablist" element. */
+
+.lu-tabbar {
+  display: flex;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  /* the hairline is a shadow, so the selected tab's underline can sit over it without overflowing the bar */
+  box-shadow: inset 0 -1px 0 var(--divider);
+  font-family: var(--font-sans);
+  overflow-x: auto;
+}
+.lu-tabbar__tab {
+  appearance: none;
+  box-sizing: border-box;
+  margin: 0;
+  padding: var(--space-3) var(--space-4);
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: none;
+  color: var(--dimmed);
+  font-family: inherit;
+  font-size: var(--text-ui);
+  font-weight: 600;
+  line-height: 1;
+  text-box: trim-both cap alphabetic;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color var(--lu-duration) ease-out, border-color var(--lu-duration) ease-out;
+}
+.lu-tabbar__tab:hover:not(:disabled) {
+  color: var(--foreground);
+}
+.lu-tabbar__tab[aria-selected="true"],
+.lu-tabbar__tab[aria-current] {
+  border-bottom-color: var(--primary);
+  color: var(--foreground-strong);
+}
+.lu-tabbar__tab:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: -2px;
+}
+.lu-tabbar__tab:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ---------- Stack ----------
+   Lays children in a column (or a row) with a token gap. */
+
+.lu-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--lu-stack-gap, 0);
+}
+.lu-stack--horizontal { flex-direction: row; }
+.lu-stack--inline { display: inline-flex; }
+.lu-stack--wrap { flex-wrap: wrap; }
+.lu-stack--align-start { align-items: flex-start; }
+.lu-stack--align-center { align-items: center; }
+.lu-stack--align-end { align-items: flex-end; }
+.lu-stack--justify-center { justify-content: center; }
+.lu-stack--justify-end { justify-content: flex-end; }
+.lu-stack--justify-between { justify-content: space-between; }
+.lu-stack--gap-1 { --lu-stack-gap: var(--space-1); }
+.lu-stack--gap-2 { --lu-stack-gap: var(--space-2); }
+.lu-stack--gap-3 { --lu-stack-gap: var(--space-3); }
+.lu-stack--gap-4 { --lu-stack-gap: var(--space-4); }
+.lu-stack--gap-6 { --lu-stack-gap: var(--space-6); }
+.lu-stack--gap-8 { --lu-stack-gap: var(--space-8); }
+.lu-stack--gap-12 { --lu-stack-gap: var(--space-12); }
+
+/* ---------- Container ----------
+   The page column: centred, capped width, side gutters. */
+
+:where(:root) {
+  --lu-container-width: 1024px;
+  --lu-grid-min: 260px;
+}
+.lu-container {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: var(--lu-container-width);
+  margin-inline: auto;
+  padding-inline: var(--space-4);
+}
+.lu-container--wide {
+  --lu-container-width: 1280px;
+}
+
+/* ---------- Grid ----------
+   Cards that fill as many columns as fit (--lu-grid-min wide at least), or a
+   fixed two-up for side-by-side panels. */
+
+.lu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--lu-grid-min)), 1fr));
+  gap: var(--space-3);
+}
+.lu-grid--halves {
+  grid-template-columns: minmax(0, 1fr);
+}
+@media (min-width: 960px) {
+  .lu-grid--halves {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ---------- Spinner ----------
+   A ring that turns while something loads. Takes the colour of the text
+   (primary by default). */
+
+.lu-spinner {
+  display: inline-block;
+  box-sizing: border-box;
+  width: 2rem;
+  height: 2rem;
+  border: 0.25rem solid color-mix(in oklab, currentColor 24%, transparent);
+  border-top-color: currentColor;
+  border-radius: var(--radius-full);
+  color: var(--primary);
+  vertical-align: middle;
+  animation: lu-spin 0.75s linear infinite;
+}
+.lu-spinner--sm {
+  width: 1rem;
+  height: 1rem;
+  border-width: 0.15rem;
+}
+.lu-spinner--inherit {
+  color: inherit;
+}
+@keyframes lu-spin {
+  to { rotate: 360deg; }
+}
+
+/* ---------- Drawer (<dialog class="lu-drawer">, opened with showModal()) ----------
+   A side panel for help and details: the modal level of Elevation, docked to
+   the right edge and full height. */
+
+.lu-drawer {
+  box-sizing: border-box;
+  position: fixed;
+  inset: 0 0 0 auto;
+  width: min(400px, 100vw);
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  margin: 0;
+  padding: var(--space-6);
+  border: none;
+  border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+  background: var(--panel-raised);
+  box-shadow: var(--shadow-lg);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  overflow: auto;
+  /* 閉じるフェード中も向きと間隔を保つため、[open] ではなくここに置く */
+  flex-direction: column;
+  gap: var(--space-4);
+  opacity: 0;
+  translate: var(--space-8) 0;
+  transition:
+    opacity var(--lu-duration-slow) ease-out,
+    translate var(--lu-duration-slow) ease-out,
+    overlay var(--lu-duration-slow) allow-discrete,
+    display var(--lu-duration-slow) allow-discrete;
+}
+.lu-drawer[open] {
+  display: flex;
+  opacity: 1;
+  translate: 0 0;
+}
+@starting-style {
+  .lu-drawer[open] {
+    opacity: 0;
+    translate: var(--space-8) 0;
+  }
+}
+.lu-drawer::backdrop {
+  background: color-mix(in oklab, var(--background) 60%, transparent);
+  -webkit-backdrop-filter: blur(4px);
+          backdrop-filter: blur(4px);
+  opacity: 0;
+  transition:
+    opacity var(--lu-duration-slow) ease-out,
+    overlay var(--lu-duration-slow) allow-discrete,
+    display var(--lu-duration-slow) allow-discrete;
+}
+.lu-drawer[open]::backdrop {
+  opacity: 1;
+}
+@starting-style {
+  .lu-drawer[open]::backdrop {
+    opacity: 0;
+  }
+}
+.lu-drawer__title {
+  margin: 0;
+  color: var(--foreground-strong);
+  font-size: var(--text-h4);
+  font-weight: 700;
+  line-height: 1.5;
+}
+.lu-drawer__body {
+  line-height: 2;
+}
+.lu-drawer__body > :first-child { margin-top: 0; }
+.lu-drawer__body > :last-child { margin-bottom: 0; }
+
+/* ---------- Menu ----------
+   A dropdown of actions that opens under its trigger: the dropdown level of
+   Elevation (panel-raised, shadow-md). Open and close it from script; the
+   panel is hidden with the `hidden` attribute. */
+
+.lu-menu {
+  position: relative;
+  display: inline-block;
+}
+.lu-menu__panel {
+  box-sizing: border-box;
+  position: absolute;
+  top: calc(100% + var(--space-1));
+  right: 0;
+  z-index: 200;
+  display: grid;
+  min-width: 12rem;
+  padding: var(--space-1);
+  border-radius: var(--radius-md);
+  background: var(--panel-raised);
+  box-shadow: var(--shadow-md);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+.lu-menu__panel[hidden] {
+  display: none;
+}
+.lu-menu__item {
+  appearance: none;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  border: none;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--foreground);
+  font-family: inherit;
+  font-size: var(--text-ui);
+  line-height: 1.5;
+  text-align: start;
+  text-decoration: none;
+  cursor: pointer;
+}
+.lu-menu__item:hover,
+.lu-menu__item:focus-visible {
+  background: color-mix(in oklab, var(--primary) 12%, transparent);
+}
+.lu-menu__item:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: -2px;
+}
+.lu-menu__item--danger {
+  color: var(--danger);
+}
+.lu-menu__divider {
+  height: 1px;
+  margin: var(--space-1) 0;
+  border: none;
+  background: var(--divider);
+}
+.lu-menu__text {
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  color: var(--dimmed);
+  font-size: var(--text-small);
+  line-height: 1.5;
+}
+
+/* ---------- Utilities ----------
+   A few single-purpose classes for spacing and text, on the spacing tokens:
+   lu-m{t,b,s,e,x,y}-{n} / lu-p{t,b,s,e,x,y}-{n} with n in 0, 1, 2, 3, 4, 6, 8, 12, 16
+   (no side letter: all four sides). */
+
+.lu-mt-0 { margin-top: 0; }
+.lu-mt-1 { margin-top: var(--space-1); }
+.lu-mt-2 { margin-top: var(--space-2); }
+.lu-mt-3 { margin-top: var(--space-3); }
+.lu-mt-4 { margin-top: var(--space-4); }
+.lu-mt-6 { margin-top: var(--space-6); }
+.lu-mt-8 { margin-top: var(--space-8); }
+.lu-mt-12 { margin-top: var(--space-12); }
+.lu-mt-16 { margin-top: var(--space-16); }
+.lu-mb-0 { margin-bottom: 0; }
+.lu-mb-1 { margin-bottom: var(--space-1); }
+.lu-mb-2 { margin-bottom: var(--space-2); }
+.lu-mb-3 { margin-bottom: var(--space-3); }
+.lu-mb-4 { margin-bottom: var(--space-4); }
+.lu-mb-6 { margin-bottom: var(--space-6); }
+.lu-mb-8 { margin-bottom: var(--space-8); }
+.lu-mb-12 { margin-bottom: var(--space-12); }
+.lu-mb-16 { margin-bottom: var(--space-16); }
+.lu-ms-0 { margin-inline-start: 0; }
+.lu-ms-1 { margin-inline-start: var(--space-1); }
+.lu-ms-2 { margin-inline-start: var(--space-2); }
+.lu-ms-3 { margin-inline-start: var(--space-3); }
+.lu-ms-4 { margin-inline-start: var(--space-4); }
+.lu-ms-6 { margin-inline-start: var(--space-6); }
+.lu-ms-8 { margin-inline-start: var(--space-8); }
+.lu-ms-12 { margin-inline-start: var(--space-12); }
+.lu-ms-16 { margin-inline-start: var(--space-16); }
+.lu-me-0 { margin-inline-end: 0; }
+.lu-me-1 { margin-inline-end: var(--space-1); }
+.lu-me-2 { margin-inline-end: var(--space-2); }
+.lu-me-3 { margin-inline-end: var(--space-3); }
+.lu-me-4 { margin-inline-end: var(--space-4); }
+.lu-me-6 { margin-inline-end: var(--space-6); }
+.lu-me-8 { margin-inline-end: var(--space-8); }
+.lu-me-12 { margin-inline-end: var(--space-12); }
+.lu-me-16 { margin-inline-end: var(--space-16); }
+.lu-mx-0 { margin-inline: 0; }
+.lu-mx-1 { margin-inline: var(--space-1); }
+.lu-mx-2 { margin-inline: var(--space-2); }
+.lu-mx-3 { margin-inline: var(--space-3); }
+.lu-mx-4 { margin-inline: var(--space-4); }
+.lu-mx-6 { margin-inline: var(--space-6); }
+.lu-mx-8 { margin-inline: var(--space-8); }
+.lu-mx-12 { margin-inline: var(--space-12); }
+.lu-mx-16 { margin-inline: var(--space-16); }
+.lu-my-0 { margin-block: 0; }
+.lu-my-1 { margin-block: var(--space-1); }
+.lu-my-2 { margin-block: var(--space-2); }
+.lu-my-3 { margin-block: var(--space-3); }
+.lu-my-4 { margin-block: var(--space-4); }
+.lu-my-6 { margin-block: var(--space-6); }
+.lu-my-8 { margin-block: var(--space-8); }
+.lu-my-12 { margin-block: var(--space-12); }
+.lu-my-16 { margin-block: var(--space-16); }
+.lu-m-0 { margin: 0; }
+.lu-m-1 { margin: var(--space-1); }
+.lu-m-2 { margin: var(--space-2); }
+.lu-m-3 { margin: var(--space-3); }
+.lu-m-4 { margin: var(--space-4); }
+.lu-m-6 { margin: var(--space-6); }
+.lu-m-8 { margin: var(--space-8); }
+.lu-m-12 { margin: var(--space-12); }
+.lu-m-16 { margin: var(--space-16); }
+.lu-pt-0 { padding-top: 0; }
+.lu-pt-1 { padding-top: var(--space-1); }
+.lu-pt-2 { padding-top: var(--space-2); }
+.lu-pt-3 { padding-top: var(--space-3); }
+.lu-pt-4 { padding-top: var(--space-4); }
+.lu-pt-6 { padding-top: var(--space-6); }
+.lu-pt-8 { padding-top: var(--space-8); }
+.lu-pt-12 { padding-top: var(--space-12); }
+.lu-pt-16 { padding-top: var(--space-16); }
+.lu-pb-0 { padding-bottom: 0; }
+.lu-pb-1 { padding-bottom: var(--space-1); }
+.lu-pb-2 { padding-bottom: var(--space-2); }
+.lu-pb-3 { padding-bottom: var(--space-3); }
+.lu-pb-4 { padding-bottom: var(--space-4); }
+.lu-pb-6 { padding-bottom: var(--space-6); }
+.lu-pb-8 { padding-bottom: var(--space-8); }
+.lu-pb-12 { padding-bottom: var(--space-12); }
+.lu-pb-16 { padding-bottom: var(--space-16); }
+.lu-ps-0 { padding-inline-start: 0; }
+.lu-ps-1 { padding-inline-start: var(--space-1); }
+.lu-ps-2 { padding-inline-start: var(--space-2); }
+.lu-ps-3 { padding-inline-start: var(--space-3); }
+.lu-ps-4 { padding-inline-start: var(--space-4); }
+.lu-ps-6 { padding-inline-start: var(--space-6); }
+.lu-ps-8 { padding-inline-start: var(--space-8); }
+.lu-ps-12 { padding-inline-start: var(--space-12); }
+.lu-ps-16 { padding-inline-start: var(--space-16); }
+.lu-pe-0 { padding-inline-end: 0; }
+.lu-pe-1 { padding-inline-end: var(--space-1); }
+.lu-pe-2 { padding-inline-end: var(--space-2); }
+.lu-pe-3 { padding-inline-end: var(--space-3); }
+.lu-pe-4 { padding-inline-end: var(--space-4); }
+.lu-pe-6 { padding-inline-end: var(--space-6); }
+.lu-pe-8 { padding-inline-end: var(--space-8); }
+.lu-pe-12 { padding-inline-end: var(--space-12); }
+.lu-pe-16 { padding-inline-end: var(--space-16); }
+.lu-px-0 { padding-inline: 0; }
+.lu-px-1 { padding-inline: var(--space-1); }
+.lu-px-2 { padding-inline: var(--space-2); }
+.lu-px-3 { padding-inline: var(--space-3); }
+.lu-px-4 { padding-inline: var(--space-4); }
+.lu-px-6 { padding-inline: var(--space-6); }
+.lu-px-8 { padding-inline: var(--space-8); }
+.lu-px-12 { padding-inline: var(--space-12); }
+.lu-px-16 { padding-inline: var(--space-16); }
+.lu-py-0 { padding-block: 0; }
+.lu-py-1 { padding-block: var(--space-1); }
+.lu-py-2 { padding-block: var(--space-2); }
+.lu-py-3 { padding-block: var(--space-3); }
+.lu-py-4 { padding-block: var(--space-4); }
+.lu-py-6 { padding-block: var(--space-6); }
+.lu-py-8 { padding-block: var(--space-8); }
+.lu-py-12 { padding-block: var(--space-12); }
+.lu-py-16 { padding-block: var(--space-16); }
+.lu-p-0 { padding: 0; }
+.lu-p-1 { padding: var(--space-1); }
+.lu-p-2 { padding: var(--space-2); }
+.lu-p-3 { padding: var(--space-3); }
+.lu-p-4 { padding: var(--space-4); }
+.lu-p-6 { padding: var(--space-6); }
+.lu-p-8 { padding: var(--space-8); }
+.lu-p-12 { padding: var(--space-12); }
+.lu-p-16 { padding: var(--space-16); }
+
+.lu-ms-auto { margin-inline-start: auto; }
+.lu-me-auto { margin-inline-end: auto; }
+.lu-mx-auto { margin-inline: auto; }
+
+.lu-text-dimmed { color: var(--dimmed); }
+.lu-text-primary { color: var(--primary); }
+.lu-text-success { color: var(--success); }
+.lu-text-warning { color: var(--warning); }
+.lu-text-danger { color: var(--danger); }
+.lu-text-center { text-align: center; }
+.lu-text-start { text-align: start; }
+.lu-text-end { text-align: end; }
+.lu-text-small { font-size: var(--text-small); line-height: 1.5; }
+.lu-text-bold { font-weight: 700; }
+
+@media (prefers-reduced-motion: reduce) {
+  .lu-tabbar__tab, .lu-drawer, .lu-drawer::backdrop {
+    transition: none;
+  }
+  .lu-spinner {
+    animation-duration: 2s;
+  }
+}
+
+/* ---------- Control / Well ----------
+   A bare raised frame (the control level: panel-button + shadow-control) for
+   putting several recessed wells side by side, e.g. a start and an end joined
+   by a separator. Like Textfield it takes a small title on the frame and a
+   caption just under it; the well is Textfield's recessed input on its own. */
+
+.lu-control {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: 100%;
+  box-sizing: border-box;
+  width: 100%;
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+.lu-control::before {
+  content: "";
+  grid-row: 1 / 3;
+  grid-column: 1;
+  z-index: -1;
+  border-radius: var(--radius-md);
+  background: var(--panel-button);
+  box-shadow: var(--shadow-control);
+  transition: background-color var(--lu-duration) ease-out;
+}
+.lu-control:hover:not(:has(:disabled))::before {
+  background: color-mix(in oklab, var(--panel-button) 94%, var(--foreground));
+}
+.lu-control__title {
+  transition: color var(--lu-duration) ease-out;
+  grid-row: 1;
+  grid-column: 1;
+  padding: var(--space-3) var(--space-3) var(--space-1);
+  font-size: var(--text-small);
+  font-weight: 600;
+  line-height: 1;
+  text-box: trim-both cap alphabetic;
+}
+.lu-control__body {
+  grid-row: 2;
+  grid-column: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+  padding: var(--size-rim);
+}
+.lu-control__body > .lu-well {
+  flex: 1 1 0;
+  min-width: 0;
+}
+.lu-control__sep {
+  flex: none;
+  color: var(--dimmed);
+  font-size: var(--text-ui);
+  line-height: 1;
+}
+.lu-control__caption {
+  transition: color var(--lu-duration) ease-out;
+  grid-row: 3;
+  grid-column: 1;
+  padding: var(--space-1) var(--space-3) 0;
+  color: var(--dimmed);
+  font-size: var(--text-small);
+  line-height: 1.5;
+}
+.lu-control:has([aria-invalid="true"]) > .lu-control__caption {
+  color: var(--danger);
+}
+.lu-control:has([aria-invalid="true"]) > .lu-control__title {
+  color: color-mix(in oklab, var(--danger) 75%, var(--foreground-strong));
+}
+.lu-control:has(:disabled) {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* the recessed well (Textfield's input without its frame) */
+.lu-well {
+  box-sizing: border-box;
+  width: 100%;
+  height: calc(var(--size-control) - 2 * var(--size-rim));
+  margin: 0;
+  padding: 0 calc(var(--space-3) - var(--size-rim));
+  border: none;
+  border-radius: calc(var(--radius-md) - var(--size-rim));
+  background: var(--panel);
+  box-shadow: var(--shadow-inset);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  line-height: 1.5;
+  outline: none; /* the glow shows focus */
+  transition: box-shadow var(--lu-duration-slow) ease-out, color var(--lu-duration) ease-out;
+}
+.lu-well::placeholder {
+  color: var(--dimmed);
+  opacity: 1;
+}
+.lu-well:focus {
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--primary) 70%, transparent),
+    0 0 10px 2px color-mix(in oklab, var(--primary) 45%, transparent),
+    var(--shadow-inset);
+}
+.lu-well[aria-invalid="true"] {
+  color: var(--danger);
+}
+.lu-well:disabled {
+  cursor: not-allowed;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lu-control::before, .lu-control__title, .lu-control__caption, .lu-well {
+    transition: none;
+  }
+}

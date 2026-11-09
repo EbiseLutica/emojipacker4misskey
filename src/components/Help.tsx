@@ -9,7 +9,7 @@ export const Help: React.FC = () => (
       <li>
         [インポート] を選択し、ダウンロードしたパックを選択します。
         <img
-          className="mw-100"
+          style={{ maxWidth: "100%" }}
           src={imageHelp1}
           alt="Misskeyのカスタム絵文字管理画面"
         />

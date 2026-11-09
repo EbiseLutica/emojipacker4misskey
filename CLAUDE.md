@@ -18,11 +18,12 @@ pnpm preview    # プロダクションビルドのプレビュー
 
 ## アーキテクチャ
 
-**技術スタック:** React 18 + TypeScript + Vite + React Bootstrap
+**技術スタック:** React 18 + TypeScript + Vite + Lutica Design System
 
 ### ディレクトリ構成
 
-- `src/components/` - ReactコンポーネントUI (react-hook-form, react-bootstrap使用)
+- `src/components/` - ReactコンポーネントUI (react-hook-form使用、見た目は `lu-*` クラス)
+- `src/styles/lutica/` - Lutica Design SystemのCSSとフォント (Artifactから取得したもの。手で編集しない)
 - `src/services/` - ZIP処理とメタデータ生成のビジネスロジック
 - `src/models/` - コアデータ構造のTypeScriptインターフェース (Emoji, FormValues)
 - `src/types/` - MisskeyのZIPメタデータフォーマット型定義

@@ -1,14 +1,5 @@
-@import "bootstrap/scss/bootstrap";
-
 body {
-  background-color: rgb(248, 238, 237);
-  font-family: "Koruri", sans-serif;
-}
-
-.ep-root {
-  max-width: 1400px;
-  width: 100%;
-  margin: 0 auto;
+  margin: 0;
 }
 
 .emoji {
@@ -16,22 +7,58 @@ body {
 }
 
 .dropzone {
-  border: 2px dashed var(--bs-gray-700);
-  border-radius: 8px;
-  padding: 2rem;
+  border: 2px dashed var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-8);
   text-align: center;
   cursor: pointer;
   transition:
-    border-color 0.2s,
-    background-color 0.2s;
+    border-color var(--lu-duration),
+    background-color var(--lu-duration);
 
   &:hover {
-    border-color: var(--bs-primary);
-    background-color: rgba(13, 110, 253, 0.05);
+    border-color: var(--primary);
+    background-color: color-mix(in oklab, var(--primary) 5%, transparent);
   }
 
   &.dropzone-active {
-    border-color: var(--bs-primary);
-    background-color: rgba(13, 110, 253, 0.1);
+    border-color: var(--primary);
+    background-color: color-mix(in oklab, var(--primary) 10%, transparent);
   }
+}
+
+.ep-table-scroll {
+  overflow-x: auto;
+}
+
+.ep-table {
+  width: 100%;
+
+  th {
+    white-space: nowrap;
+  }
+
+  td {
+    vertical-align: middle;
+  }
+}
+
+.ep-summary-title {
+  display: inline;
+  color: var(--dimmed);
+  font-size: var(--text-h5);
+  user-select: none;
+}
+
+.ep-bulk-field {
+  width: 25%;
+  min-width: 12rem;
+}
+
+.ep-dialog-wide {
+  width: min(800px, calc(100vw - 2 * var(--space-4)));
+}
+
+.ep-import-item {
+  border-bottom: 1px solid var(--divider);
 }

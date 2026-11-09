@@ -75,106 +75,94 @@ export const SectionList: React.FC<SectionListProps> = ({ onZipFile }) => {
   };
 
   return (
-    <div className="vstack gap-3">
+    <div className="lu-stack lu-stack--gap-4">
       {/* アップロードボタン */}
       <div
         {...getRootProps()}
         className={`dropzone ${isDragActive ? "dropzone-active" : ""}`}
       >
         <input {...getInputProps()} />
-        <p className="mb-0">
+        <p className="lu-my-0">
           {isDragActive
             ? "ここにドロップしてください"
             : "ここにファイルをドロップするか、クリックしてファイルを選択"}
         </p>
-        <small className="text-muted">画像またはZipファイルに対応</small>
+        <small className="lu-text-dimmed">画像またはZipファイルに対応</small>
       </div>
 
       {/* 一括編集ボタン */}
-      <section className="rounded bg-body-secondary p-3">
+      <section className="lu-card">
         <details>
           <summary>
-            <h2 className="d-inline fs-5 mb-4 text-muted user-select-none">
-              一括編集
-            </h2>
+            <h2 className="ep-summary-title">一括編集</h2>
           </summary>
-          <div className="vstack gap-3 mt-3">
-            <div>
-              <label htmlFor="inputCategory" className="fs-6">
-                カテゴリ
-              </label>
-              <div className="hstack gap-3">
+          <div className="lu-stack lu-stack--gap-4 lu-mt-4">
+            <div className="lu-stack lu-stack--horizontal lu-stack--align-end lu-stack--gap-4">
+              <label className="lu-textfield ep-bulk-field">
+                <span className="lu-textfield__title">カテゴリ</span>
                 <input
-                  id="inputCategory"
                   type="text"
-                  className="form-control w-25"
                   value={bulkCategory}
                   onChange={(e) => setBulkCategory(e.target.value)}
                 />
-                <button
-                  type="button"
-                  className="btn btn-primary"
-                  onClick={() => bulkUpdate("category", bulkCategory)}
-                >
-                  変更
-                </button>
-              </div>
-            </div>
-            <div>
-              <label htmlFor="inputTags" className="fs-6">
-                タグ
               </label>
-              <div className="hstack gap-3">
+              <button
+                type="button"
+                className="lu-button"
+                onClick={() => bulkUpdate("category", bulkCategory)}
+              >
+                変更
+              </button>
+            </div>
+            <div className="lu-stack lu-stack--horizontal lu-stack--align-end lu-stack--gap-4">
+              <label className="lu-textfield ep-bulk-field">
+                <span className="lu-textfield__title">タグ</span>
                 <input
-                  id="inputTags"
                   type="text"
-                  className="form-control w-25"
                   value={bulkTags}
                   onChange={(e) => setBulkTags(e.target.value)}
                 />
-                <button
-                  type="button"
-                  className="btn btn-primary"
-                  onClick={() => bulkUpdate("tags", bulkTags)}
-                >
-                  変更
-                </button>
-              </div>
-            </div>
-            <div>
-              <label htmlFor="inputLicense" className="fs-6">
-                ライセンス
               </label>
-              <div className="hstack gap-3">
+              <button
+                type="button"
+                className="lu-button"
+                onClick={() => bulkUpdate("tags", bulkTags)}
+              >
+                変更
+              </button>
+            </div>
+            <div className="lu-stack lu-stack--horizontal lu-stack--align-end lu-stack--gap-4">
+              <label className="lu-textfield ep-bulk-field">
+                <span className="lu-textfield__title">ライセンス</span>
                 <input
-                  id="inputLicense"
                   type="text"
-                  className="form-control w-25"
                   value={bulkLicense}
                   onChange={(e) => setBulkLicense(e.target.value)}
                 />
-                <button
-                  type="button"
-                  className="btn btn-primary"
-                  onClick={() => bulkUpdate("license", bulkLicense)}
-                >
-                  変更
-                </button>
-              </div>
+              </label>
+              <button
+                type="button"
+                className="lu-button"
+                onClick={() => bulkUpdate("license", bulkLicense)}
+              >
+                変更
+              </button>
             </div>
             <div>
-              <label className="fs-6">ローカルのみ</label>
-              <div className="hstack gap-3">
+              <div className="lu-text-small lu-text-bold lu-mb-1">
+                ローカルのみ
+              </div>
+              <div className="lu-stack lu-stack--horizontal lu-stack--gap-4">
                 <button
                   type="button"
-                  className="btn btn-success"
+                  className="lu-button"
                   onClick={() => bulkUpdateBool("localOnly", true)}
                 >
                   オン
                 </button>
                 <button
                   type="button"
-                  className="btn btn-danger"
+                  className="lu-button"
                   onClick={() => bulkUpdateBool("localOnly", false)}
                 >
                   オフ
@@ -182,18 +170,18 @@ export const SectionList: React.FC<SectionListProps> = ({ onZipFile }) => {
               </div>
             </div>
             <div>
-              <label className="fs-6">NSFW</label>
-              <div className="hstack gap-3">
+              <div className="lu-text-small lu-text-bold lu-mb-1">NSFW</div>
+              <div className="lu-stack lu-stack--horizontal lu-stack--gap-4">
                 <button
                   type="button"
-                  className="btn btn-success"
+                  className="lu-button"
                   onClick={() => bulkUpdateBool("isSensitive", true)}
                 >
                   オン
                 </button>
                 <button
                   type="button"
-                  className="btn btn-danger"
+                  className="lu-button"
                   onClick={() => bulkUpdateBool("isSensitive", false)}
                 >
                   オフ
@@ -204,8 +192,8 @@ export const SectionList: React.FC<SectionListProps> = ({ onZipFile }) => {
         </details>
       </section>
 
-      <div className="table-responsive">
-        <table className="table table-striped">
+      <div className="ep-table-scroll">
+        <table className="ep-table">
           <thead>
             <tr>
               <th>絵文字</th>

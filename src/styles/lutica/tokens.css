@@ -1,0 +1,185 @@
+/* Lutica Design System — generated from tokens.json */
+:root, [data-theme="light"] {
+  --background: #ffe5e4; /* Page background (body). */
+  --panel: #f8eeed; /* Cards, form controls and inline code chips on background. */
+  --panel-raised: #fff0ef; /* Surfaces that float above panel: dropdowns, popovers, modals (pair with shadow-md / shadow-lg). */
+  --panel-button: #fffafa; /* Face of pressable controls: secondary buttons, unchecked checkboxes and radios, select boxes, the switch thumb (pair with shadow-control). */
+  --border: #9a7a7b; /* The off-state switch track. 3:1 or more against background, panel and panel-raised in both themes. */
+  --foreground: #393535; /* Body text on background, panel and panel-button. */
+  --foreground-strong: #000000; /* Headings, strong / b, table header cells on background and panel. */
+  --divider: #dcbcbc; /* Hairlines that only separate content: hr, table rows. Decorative, not for control outlines (use border there). */
+  --dimmed: #495a6b; /* Secondary text on background and panel (5.9:1 light, 6.8:1 dark). */
+  --brand: #f24149; /* The Shrimpia red as-is: logo, app icon, decorative shapes and fills. Not for text on light background (3.1:1); use primary there. */
+  --primary: #d30e17; /* Primary buttons, star buttons, accents that carry meaning. Text on it: on-primary. */
+  --on-primary: #ffffff; /* Text and icons on a primary fill (5.5:1 light, 5.6:1 dark). */
+  --link: var(--primary); /* Links on background and panel. */
+  --success: #187a24; /* Success text, icons and fills. */
+  --warning: #876300; /* Warning text, icons and fills. */
+  --danger: #9f070e; /* Error text, icons and fills. */
+  --shadow-sm: 0 1px 2px rgba(60, 20, 22, 0.08); /* Resting cards and inputs on background. */
+  --shadow-control: inset 0 1px 0 rgba(255, 255, 255, 0.35), inset 0 -1px 0 rgba(60, 20, 22, 0.08), 0 1px 3px rgba(60, 20, 22, 0.14); /* Pressable controls on panel-button (or a primary / danger fill). Removed while pressed. */
+  --shadow-inset: inset 0 1px 2px rgba(60, 20, 22, 0.14); /* Recessed wells: the text area inside a text field or textarea frame, on panel. */
+  --shadow-md: 0 4px 12px rgba(60, 20, 22, 0.10); /* Dropdowns, popovers, the fixed header; on panel-raised. */
+  --shadow-lg: 0 12px 32px rgba(60, 20, 22, 0.16); /* Modals, and cards on hover (card hover lift); on panel-raised. */
+}
+[data-theme="dark"] {
+  --background: #0f0f1a;
+  --panel: #161625;
+  --panel-raised: #1b1b2c;
+  --panel-button: #2e2e45;
+  --border: #6b6580;
+  --foreground: #c9baba;
+  --foreground-strong: #e1e1e1;
+  --divider: #303046;
+  --dimmed: #a59ea3;
+  --brand: #f24149;
+  --primary: var(--brand);
+  --on-primary: #000000;
+  --link: var(--primary);
+  --success: #6f8e4d;
+  --warning: #ecbd15;
+  --danger: #f44336;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-control: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-inset: inset 0 1px 3px rgba(0, 0, 0, 0.45);
+  --shadow-md: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 4px 12px rgba(0, 0, 0, 0.35);
+  --shadow-lg: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 12px 32px rgba(0, 0, 0, 0.45);
+}
+:root {
+  --space-1: 4px; /* Icon-to-label gap, inline chip padding. */
+  --space-2: 8px; /* Gap between small controls (star buttons, button groups). */
+  --space-3: 12px; /* Gap between stacked form fields, compact card padding. */
+  --space-4: 16px; /* Card padding, page side gutter. */
+  --space-6: 24px; /* Gap between cards in a grid, large card padding. */
+  --space-8: 32px; /* Gap between page sections. */
+  --space-12: 48px; /* Gap between major blocks on a page; space above h3 and around hr in .lu-prose. */
+  --space-16: 64px; /* Space above h2 in .lu-prose (lutica.net). */
+  --space-20: 80px; /* Top offset under the fixed header. */
+  --radius-sm: 4px; /* Inline code chips, badges, checkboxes. */
+  --radius-md: 8px; /* Buttons, inputs, selects. */
+  --radius-lg: 12px; /* Cards, modals, popovers. */
+  --radius-full: 9999px; /* Pills, avatars, round icon buttons. */
+  --size-control: 40px; /* Height of buttons, selects and single-line text fields. */
+  --size-control-sm: 32px; /* Height of small buttons (lu-button--sm), e.g. in the navbar. */
+  --size-indicator: 20px; /* Checkbox and radio box. */
+  --size-rim: 3px; /* The rim between a text field's frame and its recessed well. */
+  --size-progress: 6px; /* Progress bar height. */
+  --size-navbar: 56px; /* Navbar height; also the top padding a page needs under a fixed navbar. */
+  --text-tiny: 11px; /* Chips and other compact labels (tiny). */
+  --text-small: 0.8rem; /* Captions, hints, field titles and captions, small buttons (small). */
+  --text-ui: 14px; /* Button labels, choice labels, UI text (label, ui-text). */
+  --text-body: 16px; /* Body text and typed text in fields (body). */
+  --text-h6: 14px; /* h6. */
+  --text-h5: 16px; /* h5. */
+  --text-h4: 18px; /* h4. */
+  --text-h3: 20px; /* h3. */
+  --text-h2: 24px; /* h2. */
+  --text-h1: 32px; /* h1. */
+  --font-sans: "Koruri", sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+.body {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 2;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.small {
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  line-height: 1.5;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.tiny {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  line-height: 1.5;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.label {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+.ui-text {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.5;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.h1 {
+  font-family: var(--font-sans);
+  font-size: 32px;
+  line-height: 1.5;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.h2 {
+  font-family: var(--font-sans);
+  font-size: 24px;
+  line-height: 1.5;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.h3 {
+  font-family: var(--font-sans);
+  font-size: 20px;
+  line-height: 1.5;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.h4 {
+  font-family: var(--font-sans);
+  font-size: 18px;
+  line-height: 1.5;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.h5 {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.h6 {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.5;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.code {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  line-height: 1.6;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+@font-face {
+  font-family: "Koruri";
+  src: url("fonts/Koruri-regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Koruri";
+  src: url("fonts/Koruri-semibold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Koruri";
+  src: url("fonts/Koruri-bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}

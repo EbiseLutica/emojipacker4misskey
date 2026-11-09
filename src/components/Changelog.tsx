@@ -3,7 +3,7 @@ import { changeLog } from "../changelog";
 export const Changelog: React.FC = () => (
   <details>
     <summary>変更履歴</summary>
-    <table className="table table-striped table-sm mt-2">
+    <table className="ep-table lu-mt-2">
       <thead>
         <tr>
           <th>バージョン</th>
