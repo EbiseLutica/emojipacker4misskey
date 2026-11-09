@@ -11,10 +11,10 @@ import "./styles/lutica/bundle.css";
 import "./App.scss";
 import { AboutDialog } from "./components/AboutDialog";
 import { Dialog } from "./components/Dialog";
-import { Help } from "./components/Help";
+import { HowToImport } from "./components/HowToImport";
 import { ImportModal } from "./components/ImportModal";
 import { ThemeToggle } from "./components/ThemeToggle";
-import { changeLog } from "./changelog";
+import { CURRENT_VERSION } from "./changelog";
 
 function App() {
   const methods = useForm<FormValues>();
@@ -98,7 +98,7 @@ function App() {
       <header className="lu-navbar lu-navbar--fixed">
         <div className="lu-navbar__inner">
           <h1 className="lu-navbar__brand">
-            Emoji Packer<small>{changeLog[0].version}</small>
+            Emoji Packer<small>{CURRENT_VERSION}</small>
           </h1>
           <nav className="lu-navbar__items">
             <button
@@ -136,7 +136,7 @@ function App() {
       <Dialog
         show={isDownloadedModalShown}
         onHide={() => setDownloadedModalShown(false)}
-        title="絵文字パックをダウンロードしました。"
+        title="完成！！"
         actions={
           <button
             type="button"
@@ -148,37 +148,37 @@ function App() {
         }
       >
         <p>
-          ダウンロードされたzipファイルをMisskeyのカスタム絵文字管理画面でインポートしてください。
+          お疲れ様でした。ダウンロードされたzipファイルを、Misskeyのカスタム絵文字管理画面でインポートしてください。
         </p>
-        <p>Emoji Packerがお役に立ちましたら、SNSでのシェアをお願いします！</p>
+        <p>Emoji Packerがお役に立ちましたら、SNSでシェアしていただけるととても嬉しいです～。</p>
         <div className="lu-stack lu-stack--horizontal lu-stack--wrap lu-stack--gap-3 lu-mb-4">
           <a
-            href="https://github.com/EbiseLutica/emojipacker4misskey"
-            className="lu-button"
-            target="_blank"
-            rel="noreferrer noopener"
-          >
-            GitHubでStar
-          </a>
-          <a
-            href="https://misskey-hub.net/share/?text=Emoji+Packer+for+Misskey%E3%82%92%E4%BD%BF%E3%81%A3%E3%81%A6%E3%81%BF%E3%81%BE%E3%81%97%E3%81%9F+%23emojipacker&url=https:%2F%2Femojipacker.lutic.at&visibility=public&localOnly=0&manualInstance=mk.shrimpia.network"
+            href="https://misskey-hub.net/share/?text=Emoji+Packer+for+Misskey%E3%82%92%E4%BD%BF%E3%81%A3%E3%81%A6%E3%81%BF%E3%81%BE%E3%81%97%E3%81%9F+%23emojipacker&url=https:%2F%2Femojipacker.lutic.at&visibility=public&localOnly=0"
             className="lu-button"
             target="_blank"
             rel="noreferrer noopener"
           >
             Misskeyでシェア
           </a>
+          <a
+            href="https://github.com/EbiseLutica/emojipacker4misskey"
+            className="lu-button"
+            target="_blank"
+            rel="noreferrer noopener"
+          >
+            GitHubでスター
+          </a>
         </div>
         
         <details>
-          <summary>Misskeyへの絵文字パックのインポート方法</summary>
-          <Help />
+          <summary>Misskeyへのインポート方法</summary>
+          <HowToImport />
         </details>
       </Dialog>
       <Dialog
         show={isImportErrorModalShown}
         onHide={() => setImportErrorModalShown(false)}
-        title="インポートエラー"
+        title="インポートに失敗しました"
         actions={
           <button
             type="button"
@@ -189,8 +189,8 @@ function App() {
           </button>
         }
       >
-        <p>{importErrorMessage}</p>
         <p>正しい形式のzipファイルを選択してください。</p>
+        <p>エラー: {importErrorMessage}</p>
       </Dialog>
       <Dialog
         show={isImportLoadingShown}

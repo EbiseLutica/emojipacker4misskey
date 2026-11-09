@@ -15,15 +15,11 @@ export const Changelog: React.FC = () => (
           <td>{log.version}</td>
           <td>{log.date}</td>
           <td>
-            {typeof log.body === "string" ? (
-              log.body
-            ) : (
-              <ul>
-                {log.body.map((body) => (
-                  <li key={body}>{body}</li>
-                ))}
-              </ul>
-            )}
+            <ul>
+              {(typeof log.body === 'string' ? [log.body] : log.body).map((body) => (
+                <li key={body}>{body}</li>
+              ))}
+            </ul>
           </td>
         </tr>
       ))}

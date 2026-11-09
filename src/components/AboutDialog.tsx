@@ -1,6 +1,6 @@
 import { Changelog } from "./Changelog";
 import { Dialog } from "./Dialog";
-import { Help } from "./Help";
+import { HowToImport } from "./HowToImport";
 
 type AboutDialogProps = {
   show: boolean;
@@ -23,7 +23,7 @@ export const AboutDialog: React.FC<AboutDialogProps> = ({ show, onHide }) => (
     }
   >
     <div className="lu-prose">
-      <h3 id={TITLE_ID}>Emoji Packer for Misskeyについて</h3>
+      <h3 id={TITLE_ID}>これなに？</h3>
       <ul>
         <li>
           Misskeyの管理画面でつかえる絵文字一括インポート用zip形式を作成できます。
@@ -39,8 +39,8 @@ export const AboutDialog: React.FC<AboutDialogProps> = ({ show, onHide }) => (
           までご連絡ください。
         </li>
       </ul>
-      <h3>Misskeyへの絵文字パックのインポート方法</h3>
-      <Help />
+      <h3>Misskey管理画面へのインポート方法</h3>
+      <HowToImport />
       <h3>変更履歴</h3>
       <Changelog />
     </div>
