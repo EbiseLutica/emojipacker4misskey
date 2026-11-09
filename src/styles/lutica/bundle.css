@@ -387,6 +387,14 @@
   font-size: var(--text-small);
 }
 
+.lu-button--icon {
+  width: var(--size-control);
+  padding: 0;
+}
+.lu-button--icon.lu-button--sm {
+  width: var(--size-control-sm);
+}
+
 .lu-button--block {
   display: flex;
   width: 100%;

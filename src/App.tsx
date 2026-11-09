@@ -13,6 +13,7 @@ import { AboutDialog } from "./components/AboutDialog";
 import { Dialog } from "./components/Dialog";
 import { Help } from "./components/Help";
 import { ImportModal } from "./components/ImportModal";
+import { ThemeToggle } from "./components/ThemeToggle";
 import { changeLog } from "./changelog";
 
 function App() {
@@ -108,8 +109,8 @@ function App() {
             >
               About
             </button>
-            <button className="lu-button lu-button--sm" type="button" aria-haspopup="menu" aria-expanded="true">dark/light/system</button>
           </nav>
+          <ThemeToggle />
         </div>
       </header>
       <main className="lu-container lu-container--wide lu-my-12">

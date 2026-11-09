@@ -1,3 +1,11 @@
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+
 body {
   margin: 0;
   padding-top: var(--size-navbar);
