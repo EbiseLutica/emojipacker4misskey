@@ -109,7 +109,7 @@ export const SectionList: React.FC<SectionListProps> = ({ onZipFile }) => {
         <p className="lu-my-0">
           {isDragActive
             ? "ここにドロップしてください"
-            : "ここにファイルをドロップするか、クリックしてファイルを選択"}
+            : "クリックするか、ファイルをドロップ"}
         </p>
         <small className="lu-text-dimmed">画像またはZipファイルに対応</small>
       </div>
@@ -121,56 +121,80 @@ export const SectionList: React.FC<SectionListProps> = ({ onZipFile }) => {
             <h2 className="ep-summary-title">一括編集</h2>
           </summary>
           <div className="lu-stack lu-stack--gap-4 lu-mt-4">
-            <div className="lu-stack lu-stack--horizontal lu-stack--align-end lu-stack--gap-4">
-              <label className="lu-textfield ep-bulk-field">
-                <span className="lu-textfield__title">カテゴリ</span>
+            <div
+              className="lu-control ep-bulk-field"
+              role="group"
+              aria-labelledby="bulkCategoryTitle"
+            >
+              <span className="lu-control__title" id="bulkCategoryTitle">
+                カテゴリ
+              </span>
+              <div className="lu-control__body">
                 <input
+                  className="lu-well"
                   type="text"
+                  aria-label="カテゴリ"
                   value={bulkCategory}
                   onChange={(e) => setBulkCategory(e.target.value)}
                 />
-              </label>
-              <button
-                type="button"
-                className="lu-button"
-                onClick={() => bulkUpdate("category", bulkCategory)}
-              >
-                変更
-              </button>
+                <button
+                  type="button"
+                  className="lu-button lu-button--sm lu-button--ghost"
+                  onClick={() => bulkUpdate("category", bulkCategory)}
+                >
+                  変更
+                </button>
+              </div>
             </div>
-            <div className="lu-stack lu-stack--horizontal lu-stack--align-end lu-stack--gap-4">
-              <label className="lu-textfield ep-bulk-field">
-                <span className="lu-textfield__title">タグ</span>
+            <div
+              className="lu-control ep-bulk-field"
+              role="group"
+              aria-labelledby="bulkTagsTitle"
+            >
+              <span className="lu-control__title" id="bulkTagsTitle">
+                タグ
+              </span>
+              <div className="lu-control__body">
                 <input
+                  className="lu-well"
                   type="text"
+                  aria-label="タグ"
                   value={bulkTags}
                   onChange={(e) => setBulkTags(e.target.value)}
                 />
-              </label>
-              <button
-                type="button"
-                className="lu-button"
-                onClick={() => bulkUpdate("tags", bulkTags)}
-              >
-                変更
-              </button>
+                <button
+                  type="button"
+                  className="lu-button lu-button--sm lu-button--ghost"
+                  onClick={() => bulkUpdate("tags", bulkTags)}
+                >
+                  変更
+                </button>
+              </div>
             </div>
-            <div className="lu-stack lu-stack--horizontal lu-stack--align-end lu-stack--gap-4">
-              <label className="lu-textfield ep-bulk-field">
-                <span className="lu-textfield__title">ライセンス</span>
+            <div
+              className="lu-control ep-bulk-field"
+              role="group"
+              aria-labelledby="bulkLicenseTitle"
+            >
+              <span className="lu-control__title" id="bulkLicenseTitle">
+                ライセンス
+              </span>
+              <div className="lu-control__body">
                 <input
+                  className="lu-well"
                   type="text"
+                  aria-label="ライセンス"
                   value={bulkLicense}
                   onChange={(e) => setBulkLicense(e.target.value)}
                 />
-              </label>
-              <button
-                type="button"
-                className="lu-button"
-                onClick={() => bulkUpdate("license", bulkLicense)}
-              >
-                変更
-              </button>
+                <button
+                  type="button"
+                  className="lu-button lu-button--sm lu-button--ghost"
+                  onClick={() => bulkUpdate("license", bulkLicense)}
+                >
+                  変更
+                </button>
+              </div>
             </div>
             <div>
               <div className="lu-text-small lu-text-bold lu-mb-1">
